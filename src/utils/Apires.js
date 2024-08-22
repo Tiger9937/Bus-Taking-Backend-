@@ -6,3 +6,4 @@ class Apires{
         this.success = success < 400
     }
 }
+export {Apires}

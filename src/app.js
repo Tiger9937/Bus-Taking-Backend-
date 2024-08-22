@@ -21,5 +21,10 @@ app.use(
     cookie()
 )
 
+// user router🚁
+import UserRouter  from './router/user.rout.js';
 
+app.use('/api/v1/users',UserRouter)
+
+// localhost:8000/api/v1/users/regidter
 export{app}
