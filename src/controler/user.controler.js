@@ -1,49 +1,58 @@
-import {asyncHandel} from '../utils/asyncHandaler.js';
-import {ApiError} from '../utils/ApiError.js';
-import {User} from '../models/user.model.js';
-import {cloudinary_FUNCTION as UpLoader} from '../utils/cloudinary.js';
-import {Apires} from '../utils/Apires.js';
-const Regester_User = asyncHandel(async (req , res)=>{
-       // GET details from frontent 👌
-       // cheak the user is exist or not 👌
-       // cheak the image is coming or not 👌
-       // uplode avterimage in cludnary and get the image url 👌
-       // creat user boject 👌
-       // RETURN object of the user 👌
-       // exclude sum attributes 👌
+import { asyncHandel } from '../utils/asyncHandaler.js';
+import { ApiError } from '../utils/ApiError.js';
+import { User } from '../models/user.model.js';
+import { cloudinary_FUNCTION as UpLoader } from '../utils/cloudinary.js';
+import { Apires } from '../utils/Apires.js';
 
-       const {usename,email,password,fullname} = req.body
-       if ([usename,email,password,fullname].some((fild)=> fild?.trim() === "" )) {
-              throw new ApiError(400,"all fild are requrit To sigin")
-       }
-       const exsting_user  = User.findOne({
-              $or: [{usename},{email}]
-       })
-       if(exsting_user){
-              throw new ApiError(409," user well have already exist")
-       }
-       const GetAvatarImage = req.file?.avatar[0]?.path
-       console.log(GetAvatarImage);
-       if (!GetAvatarImage) {
-              throw new ApiError(409," file is not resived")
-       }
-       const imageURL=await UpLoader(GetAvatarImage)
-       const user = await User.create({
-              usename:usename.toLowerCase(),
-              email,
-              password,
-              fullname,
-              avatar: imageURL.url
-       })
-       const usercreated = await User.findById(user._id).select("-refreshToken")
-       if(!usercreated){
-              throw new ApiError(500," Somthing Wont Worng While Server Take Some Mistake ")
-       }
-       return res.status(201).json(
-              new Apires(200,usercreated,"user creation successfull")
-       )
-       
-       
-})
+const Register_User = asyncHandel(async (req, res) => {
+    // GET details from frontend 👌
+    // Check if the user exists or not 👌
+    // Check if the image is present or not 👌
+    // Upload avatar image to Cloudinary and get the image URL 👌
+    // Create user object 👌
+    // RETURN the object of the user 👌
+    // Exclude some attributes 👌
 
-export {Regester_User}
+    const { usename, email, password, fullname } = req.body;
+   
+
+    if ([usename, email, password, fullname].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "All fields are required to sign in");
+    }
+    
+    const existing_user =await User.findOne({
+        $or: [{ usename }, { email }]
+    });
+    
+    if (existing_user) {
+        throw new ApiError(409, "User already exists");
+    }
+
+    const GetAvatarImage = req.files?.avatar[0]?.path;
+    console.log(GetAvatarImage);
+
+    if (!GetAvatarImage) {
+        throw new ApiError(400, "File not received");
+    }
+
+    const imageURL = await UpLoader(GetAvatarImage);
+    const user = await User.create({
+        usename: usename.toLowerCase(),
+        email,
+        password,
+        fullname,
+        avatar: imageURL.url
+    });
+
+    const userCreated = await User.findById(user._id).select("-refreshToken");
+
+    if (!userCreated) {
+        throw new ApiError(500, "Something went wrong while processing the request");
+    }
+
+    return res.status(201).json(
+        new Apires(201, userCreated, "User creation successful")
+    );
+});
+
+export { Register_User };

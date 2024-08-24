@@ -1,1 +1,1 @@
-export const D_BName = "BUS ROOT"
+export const D_BName = "collageBus"

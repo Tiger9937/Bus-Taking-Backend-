@@ -1,5 +1,5 @@
 class Apires{
-    constructor(statusCode , data , message = "success"){
+    constructor(statusCode , data , message = "success",success){
         this.statusCode = statusCode
         this.data = data
         this.message = message

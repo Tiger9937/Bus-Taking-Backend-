@@ -13,9 +13,12 @@ const cloudinary_FUNCTION = async (Local_File_Path)=>{
         });
         //Upload an file
                 const fileRSPOS = await cloudinary.uploader.upload(Local_File_Path,{
-                resource_type: 'auto'
+                resource_type: 'auto',folder : "user profile image"
             }) 
             console.log("file has been successfully uploaded",fileRSPOS.url)
+            setTimeout(()=>{
+                fs.unlinkSync(Local_File_Path);
+            }, 10000);
             return fileRSPOS
     } catch (error) {
             fs.unlink(Local_File_Path)
