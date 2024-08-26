@@ -145,7 +145,7 @@ const Logout_User = asyncHandel(async (req,res)=>{
 
     res.status(200).clearCookie("accsessToken",options)
     res.status(200).clearCookie("refressToken",options)
-    res.json(new ApiResponse(200,{},"user logout"))
+    res.json(new Apires(200,{},"user logout"))
 })
 
 export { Register_User,Login_User,Logout_User};
