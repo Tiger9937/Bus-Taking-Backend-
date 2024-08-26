@@ -122,4 +122,30 @@ const Login_User = asyncHandel(async (req,res)=>{
     );
             
 })
-export { Register_User,Login_User };
+
+const Logout_User = asyncHandel(async (req,res)=>{
+    // GET refress Token Thourgh cookie  frome the user
+    // delete the user in our DB
+    // RETURN logout success message 
+
+    await User.findByIdAndUpdate(
+        req.user._id,{
+            $set:{
+                refreshToken: undefined
+            }
+        },{
+            new: true
+        }
+    )
+    const options = {
+        httpOnly : true, 
+        secure : true
+    }
+
+
+    res.status(200).clearCookie("accsessToken",options)
+    res.status(200).clearCookie("refressToken",options)
+    res.json(new ApiResponse(200,{},"user logout"))
+})
+
+export { Register_User,Login_User,Logout_User};
