@@ -1,9 +1,9 @@
 import { asyncHandel } from '../utils/asyncHandaler.js';
 import { ApiError } from '../utils/ApiError.js';
 import { User } from '../models/user.model.js';
-import { cloudinary_FUNCTION as UpLoader } from '../utils/cloudinary.js';
+import { cloudinary_FUNCTION, cloudinary_FUNCTION as UpLoader } from '../utils/cloudinary.js';
 import { Apires } from '../utils/Apires.js';
-
+import {Delete_file} from '../utils/deletfileCludinary.js';
 
 const generate_AccessToken_RefreshToken =async (userid)=>{
     try {
@@ -147,5 +147,87 @@ const Logout_User = asyncHandel(async (req,res)=>{
     res.status(200).clearCookie("refressToken",options)
     res.json(new Apires(200,{},"user logout"))
 })
+const UpDateAvatar_image = asyncHandel(async,async (req,res)=>{
+    const filePath = req.file?.path 
 
-export { Register_User,Login_User,Logout_User};
+    if (!filePath) {
+        throw new ApiError(401,"file is not risivet at")
+    }
+
+    const Image_url = await cloudinary_FUNCTION(filePath)
+    if (!Image_url) {
+        throw new ApiError(401,"image url well not get")
+    }
+
+    const userforoldimage = await User.findById(req.user?._id)
+    const Oldimage_path = userforoldimage.avatar
+    const delete_file  = await Delete_file(Oldimage_path)
+    console.log(delete_file);
+
+
+    const user = await User.findByIdAndUpdate(req.user?._id,{
+        $set:{
+            avatar:Image_url.url
+        }
+    },{new:true}).select("-password -refreshToken")
+    
+    res.status(200)
+    .json(
+        new Apires(200,user, "User Profile Image update successful")
+    );
+    
+})
+const AccountDetails_Change = asyncHandel(async,async (req,res)=>{
+    // GET Updateed Data from user
+    // cheak the all 
+    // RETURN Update info
+
+
+    const {usename,email} = req.body
+    if (!usename || !email) {
+        throw new ApiError(401,"username and email are not found at")
+    }
+    const user = await User.findByIdAndUpdate(req.user?._id,{
+        $set:{
+            usename:usename,
+            email:email
+        }
+    })
+    res.status(200).json(
+        new Apires(200,user,"Account Details Change SuccessFull")
+    )
+    
+})
+const Password_Change = asyncHandel(async(req,res)=>{
+    // GET A new password 
+    // cheak this password is coming or not
+    // call user and get old password 
+    // change the password to a new password 
+    // use save before validation to ensuar that the only password well chenged
+    // RETURN message
+    const {password} = req.body
+    if (!password) {
+        throw new ApiError(401,"password well not resived")
+    }
+    const user = await User.findById(req.user?.id)
+    const oldpassword = user.password 
+    if (oldpassword) {
+        throw new ApiError(401,"old password is not come")
+    }
+    const varifiedPasword = await user.isPasswordCorrect(oldpassword) // this well return true or false 
+    if (!varifiedPasword) {
+        throw new ApiError(401, "Old password is incorrect");
+    }
+
+    user.password = password
+    await user.save({validateBeforeSave:false})
+    res.status(200).json(200,{},"password change successfull")
+})
+
+export { Register_User,
+            Login_User,
+            Logout_User,
+            UpDateAvatar_image,
+            AccountDetails_Change,
+            Password_Change
+};
