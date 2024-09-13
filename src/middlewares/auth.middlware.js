@@ -18,7 +18,7 @@ try {
         const cookie = await req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer " , "")
         if(!cookie){
             throw new ApiError(401,"cookie well not come")
-        }
+        }   
         const decode = jwt.verify(cookie,process.env.ACCESS_TOKEN_PRIVAT)
         if(!decode){
             throw new ApiError(401,"verify fake JET Token Token will not exist")

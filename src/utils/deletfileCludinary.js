@@ -5,7 +5,7 @@ cloudinary.config({
     api_key: `${process.env.CLOUDINARY_API_KEY}`,
     api_secret: `${process.env.CLOUDINARY_API_SECRET}`
 });
-Delete_file =async (filepath)=>{
+const Delete_file = async (filepath)=>{
 cloudinary.api.delete_resources(filepath,function(result) {
     console.log(result);
 });

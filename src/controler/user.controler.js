@@ -4,6 +4,7 @@ import { User } from '../models/user.model.js';
 import { cloudinary_FUNCTION, cloudinary_FUNCTION as UpLoader } from '../utils/cloudinary.js';
 import { Apires } from '../utils/Apires.js';
 import {Delete_file} from '../utils/deletfileCludinary.js';
+import jwt from 'jsonwebtoken'
 
 const generate_AccessToken_RefreshToken =async (userid)=>{
     try {
@@ -123,6 +124,53 @@ const Login_User = asyncHandel(async (req,res)=>{
             
 })
 
+const refreshAccessToken = asyncHandel(async (req,res)=>{
+    // GET thought cookis access the Token
+    // cheak the token is or not
+    // varifiy the token
+    // chake the varifivad token is match our upcoming token or not
+    // bring the id of the user 
+    // call the user thought the id
+    // genreat a new Token 
+    // RETURN Token 
+
+
+
+    const incoming_refress_token = await req.cookies.refreshToken || req.body.refreshToken
+
+    if(!incoming_refress_token){
+        throw new ApiError(400,"refress Token is not comming")
+    }
+
+    const DecodedToken = jwt.verify(incoming_refress_token, process.env.REFRESH_TOKEN_PRIVAT)
+    if (!DecodedToken) {
+        throw new ApiError(401,"DecodedToken well not come")
+    }
+    
+    
+    const user = await User.findById(DecodedToken?._id)
+    if (!user) {
+        throw new ApiError(402,"user well not come")
+    }
+    
+    
+    if (incoming_refress_token !== user?.refreshToken) {
+        throw new ApiError(401,"Token well not match")
+    }
+    
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+    
+    const {Access_Token, Refresh_Token} = await generate_AccessToken_RefreshToken(user?._id)
+    return res.status(200)
+    .cookie("accessToken", Access_Token, options)
+    .cookie("refreshToken", Refresh_Token, options)
+    .json(new Apires(200, {"Access_Token":Access_Token,"Refresh_Token":Refresh_Token}, "Access token refreshed"))
+   
+})
+
 const Logout_User = asyncHandel(async (req,res)=>{
     // GET refress Token Thourgh cookie  frome the user
     // delete the user in our DB
@@ -130,8 +178,8 @@ const Logout_User = asyncHandel(async (req,res)=>{
 
     await User.findByIdAndUpdate(
         req.user._id,{
-            $set:{
-                refreshToken: undefined
+            $unset:{
+                refreshToken: 1
             }
         },{
             new: true
@@ -147,7 +195,8 @@ const Logout_User = asyncHandel(async (req,res)=>{
     res.status(200).clearCookie("refressToken",options)
     res.json(new Apires(200,{},"user logout"))
 })
-const UpDateAvatar_image = asyncHandel(async,async (req,res)=>{
+
+const UpDateAvatar_image = asyncHandel(async (req,res)=>{
     const filePath = req.file?.path 
 
     if (!filePath) {
@@ -177,7 +226,8 @@ const UpDateAvatar_image = asyncHandel(async,async (req,res)=>{
     );
     
 })
-const AccountDetails_Change = asyncHandel(async,async (req,res)=>{
+
+const AccountDetails_Change = asyncHandel(async (req,res)=>{
     // GET Updateed Data from user
     // cheak the all 
     // RETURN Update info
@@ -198,6 +248,7 @@ const AccountDetails_Change = asyncHandel(async,async (req,res)=>{
     )
     
 })
+
 const Password_Change = asyncHandel(async(req,res)=>{
     // GET A new password 
     // cheak this password is coming or not
@@ -224,9 +275,11 @@ const Password_Change = asyncHandel(async(req,res)=>{
     res.status(200).json(200,{},"password change successfull")
 })
 
-export { Register_User,
+export { 
+            Register_User,
             Login_User,
             Logout_User,
+            refreshAccessToken,
             UpDateAvatar_image,
             AccountDetails_Change,
             Password_Change
