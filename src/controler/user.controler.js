@@ -246,7 +246,7 @@ const AccountDetails_Change = asyncHandel(async (req,res)=>{
     res.status(200).json(
         new Apires(200,user,"Account Details Change SuccessFull")
     )
-    
+        
 })
 
 const Password_Change = asyncHandel(async(req,res)=>{
