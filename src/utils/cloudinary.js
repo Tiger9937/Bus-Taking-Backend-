@@ -24,6 +24,5 @@ const cloudinary_FUNCTION = async (Local_File_Path)=>{
             fs.unlink(Local_File_Path)
             return null
     }
-
 } 
 export{cloudinary_FUNCTION}

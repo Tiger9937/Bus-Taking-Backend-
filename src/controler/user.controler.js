@@ -4,6 +4,7 @@ import { User } from '../models/user.model.js';
 import { cloudinary_FUNCTION, cloudinary_FUNCTION as UpLoader } from '../utils/cloudinary.js';
 import { Apires } from '../utils/Apires.js';
 import {Delete_file} from '../utils/deletfileCludinary.js';
+import {v2 as cloudinary} from 'cloudinary'
 import jwt from 'jsonwebtoken'
 
 const generate_AccessToken_RefreshToken =async (userid)=>{
@@ -33,7 +34,7 @@ const Register_User = asyncHandel(async (req, res) => {
     // Exclude some attributes 👌
 
     const { usename, email, password, fullname } = req.body;
-   
+    console.log(usename, email, password, fullname)
 
     if ([usename, email, password, fullname].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to sign in");
@@ -44,27 +45,47 @@ const Register_User = asyncHandel(async (req, res) => {
     });
     
     if (existing_user) {
+        res.json(
+            new Apires(200,"now log in to access the user","User already exists")
+        )
         throw new ApiError(409, "User already exists");
     }
-
-    const GetAvatarImage = req.files?.avatar[0]?.path;
-    console.log(GetAvatarImage);
-
-    if (!GetAvatarImage) {
-        throw new ApiError(400, "File not received");
-    }
-
-    const imageURL = await UpLoader(GetAvatarImage);
-    await User.create({
-        usename: usename.toLowerCase(),
+    cloudinary.config({ 
+        cloud_name: `${process.env.CLOUD_NAME}`, 
+        api_key: `${process.env.API_KEY}`, 
+        api_secret: `${process.env.API_SECRET}` 
+    });
+    // get the images 
+    const ImageCollection = async () => {
+        try {
+            const folderName = 'user_profile_image'
+            const subFoldersResult = await cloudinary.api.sub_folders(folderName);
+    
+          console.log('Subfolders:', subFoldersResult.folders);
+          const resourcesResult = await cloudinary.api.resources({
+            type: 'upload',
+            resource_type: 'image',
+            prefix: subFoldersResult.folders,
+            max_results: 100
+          });
+           return resourcesResult.resources
+      
+        } catch (error) {
+          console.log('Error:', error.message);
+        }
+      };
+      const images = await ImageCollection();
+      const Avter = images[Math.floor(Math.random()*8)*1].url
+     await User.create({
+        usename,
         email,
         password,
         fullname,
-        avatar: imageURL.url
+        avatar: Avter
     });
 
     return res.status(201).json(
-        new Apires(201, "now log in to access the user", "User creation successful")
+        new Apires(201,"now log in to access the user", "User creation successful")
     );
 });
 
@@ -73,9 +94,10 @@ const Login_User = asyncHandel(async (req,res)=>{
     // find the user using Findone methord 👌
     // genret the accessToken and Refress Token 
     // password cheak👌
-    // send this Token in cookie
+    // send this Token in cookie    
     // RETURN respons to login
     const {usename,email,password} = req.body
+    console.log(usename,email,password)
     if(!email && !usename){
         throw new ApiError(400,"All fields are required to login")
     }
