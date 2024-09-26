@@ -44,6 +44,15 @@ userSchema.pre("save", async function (next){
 userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password,this.password) // return true or false
 }
+
+userSchema.methods.isPasswordCorrect_toChange = async function (password) {
+    if (password === this.password) {
+        return true
+    } else {
+        return false
+    }
+}
+
 userSchema.methods.Genreat_Access_Token = function () {
     return jwt.sign({
         _id: this._id,

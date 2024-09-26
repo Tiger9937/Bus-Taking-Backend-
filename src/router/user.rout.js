@@ -33,4 +33,5 @@ UserRouter.route('/AccountDetails_Change').patch(jwtVarify,AccountDetails_Change
 
 UserRouter.route('/Password_Change').post(jwtVarify,Password_Change)
 
+
 export default UserRouter

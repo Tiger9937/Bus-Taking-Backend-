@@ -55,7 +55,7 @@ const Register_User = asyncHandel(async (req, res) => {
     }
 
     const imageURL = await UpLoader(GetAvatarImage);
-    const user = await User.create({
+    await User.create({
         usename: usename.toLowerCase(),
         email,
         password,
@@ -63,14 +63,8 @@ const Register_User = asyncHandel(async (req, res) => {
         avatar: imageURL.url
     });
 
-    const userCreated = await User.findById(user._id).select("-refreshToken");
-
-    if (!userCreated) {
-        throw new ApiError(500, "Something went wrong while processing the request");
-    }
-
     return res.status(201).json(
-        new Apires(201, userCreated, "User creation successful")
+        new Apires(201, "now log in to access the user", "User creation successful")
     );
 });
 
@@ -260,19 +254,24 @@ const Password_Change = asyncHandel(async(req,res)=>{
     if (!password) {
         throw new ApiError(401,"password well not resived")
     }
+
     const user = await User.findById(req.user?.id)
     const oldpassword = user.password 
-    if (oldpassword) {
+
+    if (!oldpassword) {
         throw new ApiError(401,"old password is not come")
     }
-    const varifiedPasword = await user.isPasswordCorrect(oldpassword) // this well return true or false 
+    
+
+    const varifiedPasword =await user.isPasswordCorrect_toChange(oldpassword) // this well return true or false 
+    console.log(varifiedPasword)
+    
     if (!varifiedPasword) {
         throw new ApiError(401, "Old password is incorrect");
     }
-
     user.password = password
     await user.save({validateBeforeSave:false})
-    res.status(200).json(200,{},"password change successfull")
+    res.status(200).json(new Apires(200,{},"password change Successful"))
 })
 
 export { 
