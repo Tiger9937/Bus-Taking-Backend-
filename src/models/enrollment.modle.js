@@ -11,18 +11,6 @@ const enrollmentSchema = new mongoose.Schema({
     ref: 'College', 
     required: true,
   },
-  enrollmentDate: {
-    type: Date,
-    default: Date.now, 
-  },
-  course: {
-    type: String, 
-    required: true,
-  },
-  status: {
-    type: String, 
-    default: 'active',
-  },
 });
 
 export const Enrollment = mongoose.model('Enrollment', enrollmentSchema);

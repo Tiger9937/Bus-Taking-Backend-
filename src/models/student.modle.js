@@ -1,21 +1,5 @@
 import mongoose from 'mongoose';
-const sudent_address = new mongoose.Schema({
-  street: {
-    type:String
-  },
-  Village:{
-    type:String
-  },
-  city:{
-     String
-  },
-  state: {
-    String
-  },
-  postalCode: {
-    String
-  },
-})
+
 
 const studentSchema = new mongoose.Schema({
   user: {
@@ -28,17 +12,60 @@ const studentSchema = new mongoose.Schema({
     ref: 'College',
     required: true,
   },
+  enrollment: {
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'Enrollment',
+  },
+  sudent_address:{
+    street: {
+      type : String,
+      require:true
+    },
+    city: {
+      type:String
+    },
+    village:{
+      type : String
+    },
+    state: {
+      type : String,
+      require:true
+    },
+    pincode: {
+      type: Number,
+      require:true
+    },
+  },
+  current_living_address:{
+    street: {
+      type : String,
+      require:true
+    },
+    city: {
+      type:String
+    },
+    village:{
+      type : String
+    },
+    state: {
+      type : String,
+      require:true
+    },
+    pincode: {
+      type: Number,
+      require:true
+    },
+  },
   enrollmentDate: {
     type: Date,
-    default: Date.now,
+    default: Date.now, 
   },
-  phoneNumber: {
-    type: Number,
+  course: {
+    type: String, 
     required: true,
   },
-  address: sudent_address,
-  rollNumber:{
-    type: Number,
+  RollNumber:{
+    type:String,
     required: true,
   },
   projects:{
