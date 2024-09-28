@@ -1,8 +1,9 @@
 import {asyncHandel} from '../utils/asyncHandaler.js'
 import {Student} from '../models/student.modle.js'
 import {College} from '../models/collage.model.js'
-
 import { ApiError } from '../utils/ApiError.js';
+import { mongo } from 'mongoose';
+import { Apires } from '../utils/Apires.js';
 
 const studentRegister = asyncHandel(async(req , res)=>{
     // GET besice info
@@ -74,18 +75,44 @@ const StudentProfile = asyncHandel(async(req,res)=>{
         throw new ApiError(401,"invalid student name")
     }
 
-
-    await Student.aggregate([
+   // get the student id  
+   // student_entities is a all the information about {collage , projects , Research_Paper, ProjectIdeas , Nots BusInfo , PublicInfo ,socialLinks}
+    const student_entities = await Student.aggregate([
         {
             $match:{
-
+                _id: new mongo.Types.ObjectId(student?._id)
+            }
+        },{
+            $lookup:{
+                from: "Colleges",
+                localField: "College",
+                foreignField:"_id",
+                as: "collageInfo"
+            }
+        },{
+            $unwind: "collageInfo"
+        },{
+            $project:{
+                "collageInfo.name":1
             }
         }
     ])
 
 
+    if (!student_entities) {
+        throw new ApiError(401,"student_entities is not coming")
+    }
+    res.status(200).json(
+        new Apires(200,[
+            student,
+            student_entities[0]
+        ]
+        ,"Profile of the student sent successfull")
+    )
+
 
 })
+
 export{
     StudentProfile,
     studentRegister,
