@@ -6,6 +6,7 @@ import { Apires } from '../utils/Apires.js';
 import {Delete_file} from '../utils/deletfileCludinary.js';
 import {v2 as cloudinary} from 'cloudinary'
 import jwt from 'jsonwebtoken'
+import  mongoose  from 'mongoose';
 
 const generate_AccessToken_RefreshToken =async (userid)=>{
     try {
@@ -296,6 +297,59 @@ const Password_Change = asyncHandel(async(req,res)=>{
     res.status(200).json(new Apires(200,{},"password change Successful"))
 })
 
+const AccessUser = asyncHandel(async(req,res)=>{
+    const {usename} = req.params
+    if (!usename) {
+        throw new ApiError(400,"user name is not coming")
+    }
+    const user = await User.findOne({usename:usename})
+    console.log(user)
+    if (!user) {
+        throw new ApiError(401,"username invalid")
+    }
+    // checking wather the user is rigster or not as student
+    const studentName = await User.aggregate([
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },{
+            $lookup:{
+                from : "Students",
+                localField:"_id",
+                foreignField:"_id",
+                as:"Student",
+                pipeline:[{
+                    $lookup:{
+                        from:"Users",
+                        localField:"_id",
+                        foreignField:"usename",
+                        as:"UserName"
+                    }
+                }
+                ]
+            }
+        },{
+            $project:{
+                "UserName.usename":1
+            }
+        }
+    ])
+
+    if (!studentName || studentName == undefined) {
+        throw new ApiError(401,"student well not coming")
+    }
+    let isUserStudent = true
+    if (studentName != usename) {
+        isUserStudent = false
+    }
+
+    res.status(200).json( 
+        new Apires(
+        200, {user , isUserStudent},"user sent successfull")
+    )
+})
+
 export { 
             Register_User,
             Login_User,
@@ -303,5 +357,6 @@ export {
             refreshAccessToken,
             UpDateAvatar_image,
             AccountDetails_Change,
-            Password_Change
+            Password_Change,
+            AccessUser
 };

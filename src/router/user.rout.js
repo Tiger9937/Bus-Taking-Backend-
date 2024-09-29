@@ -5,7 +5,8 @@ import { Register_User,
         AccountDetails_Change,
         UpDateAvatar_image,
         Password_Change,
-        refreshAccessToken
+        refreshAccessToken,
+        AccessUser
 } from "../controler/user.controler.js";
 import {upload} from "../middlewares/multer.middlewares.js";
 import {jwtVarify} from '../middlewares/auth.middlware.js';
@@ -33,5 +34,6 @@ UserRouter.route('/AccountDetails_Change').patch(jwtVarify,AccountDetails_Change
 
 UserRouter.route('/Password_Change').post(jwtVarify,Password_Change)
 
+UserRouter.route('/c/:usename').get(jwtVarify,AccessUser)
 
 export default UserRouter
