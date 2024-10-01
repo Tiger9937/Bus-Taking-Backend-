@@ -12,7 +12,8 @@ const studentRegister = asyncHandel(async(req , res)=>{
     // give him the living currend address
     // Phon number
 
-    const { Living_address,
+    const { 
+        Living_address,
         address,
         mobileNumber,
         collage ,
@@ -20,7 +21,21 @@ const studentRegister = asyncHandel(async(req , res)=>{
         course,
         RollNumber
     } = req.body
-    if ([ RollNumber,address,mobileNumber,Living_address,collage,enrollmentDate,course ].some((field) => field?.trim() === "")) {
+    console.log(
+        Living_address, // 
+        address, // 
+        mobileNumber, //
+        collage ,
+        enrollmentDate,
+        course,
+        RollNumber // 
+    )
+
+    if (!Living_address && !address && !mobileNumber) {
+        throw new ApiError(400, "All fields are required to Register the student");
+    }
+
+    if ([ collage,enrollmentDate,course,RollNumber ].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to Register the student");
     }
     // TODO get console.log(address)
@@ -28,6 +43,7 @@ const studentRegister = asyncHandel(async(req , res)=>{
     if (!Collage) {
         throw new ApiError("collage id is invalid")
     }
+    
     const student = await Student.create({
         user:req.user?._id,
         address: {
@@ -48,9 +64,10 @@ const studentRegister = asyncHandel(async(req , res)=>{
         enrollmentDate,
         course,
         RollNumber,
-        college: Collage._id
+        college: Collage?._id 
     });
 
+ 
    
     // use aggregator to customize request
     if (!student) {
@@ -58,20 +75,26 @@ const studentRegister = asyncHandel(async(req , res)=>{
     }
 
     res.status(200).json(
+        new Apires(
         200,
         {student},"Student Rigster successFull"
+        )
     )
 
 })  
 
 const StudentProfile = asyncHandel(async(req,res)=>{
-    const {studentname} = req.params
-    if(!studentname){
+    const {fullname} = req.params
+    console.log(fullname)
+    if(!fullname){
         throw new ApiError(400,"student name is requred")
     }
     
     const student = await Student.findOne({user:req.user?._id}).populate('user')
-    if (student.user.fullname != studentname) {
+
+    console.log(student?._id)
+
+    if (student.user.fullname != fullname) {
         throw new ApiError(401,"invalid student name")
     }
 
@@ -98,7 +121,7 @@ const StudentProfile = asyncHandel(async(req,res)=>{
         }
     ])
 
-
+    
     if (!student_entities) {
         throw new ApiError(401,"student_entities is not coming")
     }

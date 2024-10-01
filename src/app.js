@@ -29,8 +29,10 @@ app.use(cookieParser());
 // Import and use the user router
 import UserRouter from './router/user.rout.js';
 import StudentRout from './router/student.rout.js'
+import CollageRoute from './router/collage.rout.js'
 
 app.use('/api/v1/users', UserRouter,StudentRout);
 app.use('/api/v1/student', StudentRout);
+app.use('/api/v1/collage', CollageRoute);
 
 export { app };

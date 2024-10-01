@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 
 
-const studentSchema = new mongoose.Schema({
+const studentSchema = new mongoose.Schema(
+  {
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'User',
     required: true,
   },
   college: {
@@ -16,7 +17,7 @@ const studentSchema = new mongoose.Schema({
     type : mongoose.Schema.Types.ObjectId,
     ref: 'Enrollment',
   },
-  sudent_address:{
+  address:{
     street: {
       type : String,
       require:true
@@ -96,5 +97,5 @@ const studentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'socialMedias',
   }
-});
+},{timestamps:true});
 export const Student = mongoose.model('Student', studentSchema)
