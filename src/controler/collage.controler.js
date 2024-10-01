@@ -24,6 +24,17 @@ const CollageRigster = asyncHandel(async (req,res)=>{
     )
 })
 
+const collageDashboard = asyncHandel(async(res,req)=>{
+
+})
+
+const UpdateCollageProfile = asyncHandel(async(res,req)=>{
+
+})
+
+
 export{
-    CollageRigster
+    CollageRigster,
+    collageDashboard,
+    UpdateCollageProfile
 }

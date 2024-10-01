@@ -21,15 +21,6 @@ const studentRegister = asyncHandel(async(req , res)=>{
         course,
         RollNumber
     } = req.body
-    console.log(
-        Living_address, // 
-        address, // 
-        mobileNumber, //
-        collage ,
-        enrollmentDate,
-        course,
-        RollNumber // 
-    )
 
     if (!Living_address && !address && !mobileNumber) {
         throw new ApiError(400, "All fields are required to Register the student");
@@ -134,7 +125,35 @@ const StudentProfile = asyncHandel(async(req,res)=>{
 
 })
 
+const UpdateStudentProfile = asyncHandel(async(req,res)=>{
+    const { 
+        Living_address,
+        address,
+        mobileNumber,
+        collage ,
+        enrollmentDate,
+        course,
+        RollNumber
+    } = req.body
+
+    if (!Living_address && !address && !mobileNumber) {
+        throw new ApiError(400, "All fields are required to Register the student");
+    }
+
+    if ([ collage,enrollmentDate,course,RollNumber ].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "All fields are required to Register the student");
+    }
+
+    await Student.findByIdAndUpdate()
+
+
+
+
+})
+
+
 export{
     StudentProfile,
     studentRegister,
-}
+    UpdateStudentProfile   
+} 
