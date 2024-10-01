@@ -87,7 +87,7 @@ const StudentProfile = asyncHandel(async(req,res)=>{
     const {fullname} = req.params
     console.log(fullname)
     if(!fullname){
-        throw new ApiError(400,"student name is requred")
+        throw new ApiError(400,"student name is requred to profile")
     }
     
     const student = await Student.findOne({user:req.user?._id}).populate('user')
