@@ -17,7 +17,7 @@ try {
 
         const cookie = await req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer " , "")
         if(!cookie){
-            throw new ApiError(401,"cookie well not come")
+            throw new ApiError(401,"User not login")
         }   
         const decode = jwt.verify(cookie,process.env.ACCESS_TOKEN_PRIVAT)
         if(!decode){

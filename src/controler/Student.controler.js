@@ -2,7 +2,7 @@ import {asyncHandel} from '../utils/asyncHandaler.js'
 import {Student} from '../models/student.modle.js'
 import {College} from '../models/collage.model.js'
 import { ApiError } from '../utils/ApiError.js';
-import { mongo } from 'mongoose';
+import mongo  from 'mongoose';
 import { Apires } from '../utils/Apires.js';
 
 const studentRegister = asyncHandel(async(req , res)=>{
@@ -84,44 +84,42 @@ const studentRegister = asyncHandel(async(req , res)=>{
 })  
 
 const StudentProfile = asyncHandel(async(req,res)=>{
-    const {fullname} = req.params
-    console.log(fullname)
-    if(!fullname){
+    const {_ID} = req.params
+    if(!_ID){
         throw new ApiError(400,"student name is requred to profile")
     }
-    
-    const student = await Student.findOne({user:req.user?._id}).populate('user')
+    console.log(_ID)
+    // const student = await Student.findOne({user:req.user?._id}).populate('user').select("-refreshToken")
 
-    console.log(student?._id)
+    const student = await Student.findById(_ID)
 
-    if (student.user.fullname != fullname) {
-        throw new ApiError(401,"invalid student name")
-    }
 
+    console.log(student)
+
+    console.log(student._id)
    // get the student id  
    // student_entities is a all the information about {collage , projects , Research_Paper, ProjectIdeas , Nots BusInfo , PublicInfo ,socialLinks}
     const student_entities = await Student.aggregate([
         {
             $match:{
-                _id: new mongo.Types.ObjectId(student?._id)
+                _id: new mongo.Types.ObjectId(_ID)
             }
         },{
             $lookup:{
-                from: "Colleges",
-                localField: "College",
+                from: "colleges",
+                localField: "college",
                 foreignField:"_id",
                 as: "collageInfo"
             }
         },{
-            $unwind: "collageInfo"
-        },{
             $project:{
+                
                 "collageInfo.name":1
             }
         }
     ])
 
-    
+
     if (!student_entities) {
         throw new ApiError(401,"student_entities is not coming")
     }
