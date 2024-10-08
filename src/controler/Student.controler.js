@@ -143,12 +143,23 @@ const UpdateStudentProfile = asyncHandel(async(req,res)=>{
     if ([ collage,enrollmentDate,course,RollNumber ].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to Register the student");
     }
+    const student = await Student.findByIdAndUpdate(RollNumber,{
+        $set:{
+            Living_address,
+            address,
+            mobileNumber,
+            collage ,
+            enrollmentDate,
+            course,
+            RollNumber
+        }
+    })
 
-    await Student.findByIdAndUpdate()
+    if (!student) {
+        throw new ApiError(401,"student is not found ")
+    }
 
-
-
-
+    req.status(200).json(new Apires(200,student,"student update successfull"))
 })
 
 
