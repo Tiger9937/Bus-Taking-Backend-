@@ -4,62 +4,32 @@ import mongoose from 'mongoose';
 const studentSchema = new mongoose.Schema(
   {
   user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'User',
     required: true,
   },
+  
   college: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'College',
     required: true,
   },
-  enrollment: {
-    type : mongoose.Schema.Types.ObjectId,
-    ref: 'Enrollment',
-  },
+
+  // enrollment: {
+  //   type : mongoose.Schema.Types.ObjectId,
+  //   ref: 'Enrollment',
+  //   required : true
+  // },
+  
   address:{
-    street: {
-      type : String,
-      require:true
-    },
-    city: {
-      type:String
-    },
-    village:{
-      type : String
-    },
-    state: {
-      type : String,
-      require:true
-    },
-    pincode: {
-      type: Number,
-      require:true
-    },
+   type : mongoose.Schema.Types.ObjectId,
+   ref: "Addresses",
+   required : true
   },
   current_living_address:{
-    street: {
-      type : String,
-      require:true
-    },
-    city: {
-      type:String
-    },
-    village:{
-      type : String
-    },
-    state: {
-      type : String,
-      require:true
-    },
-    pincode: {
-      type: Number,
-      require:true
-    },
-  },
-  enrollmentDate: {
-    type: Date,
-    default: Date.now, 
+   type : mongoose.Schema.Types.ObjectId,
+   ref: "Addresses",
+   required: true
   },
   course: {
     type: String, 
@@ -67,6 +37,10 @@ const studentSchema = new mongoose.Schema(
   },
   RollNumber:{
     type:String,
+    required: true,
+  },
+  mobileNumber:{
+    type:Number,
     required: true,
   },
   projects:{

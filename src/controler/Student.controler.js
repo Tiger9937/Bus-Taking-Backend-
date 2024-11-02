@@ -4,162 +4,147 @@ import {College} from '../models/collage.model.js'
 import { ApiError } from '../utils/ApiError.js';
 import mongo  from 'mongoose';
 import { Apires } from '../utils/Apires.js';
+import {Addresses} from '../models/address.modle.js'
+import mongoose from 'mongoose';
 
-const studentRegister = asyncHandel(async(req , res)=>{
-    // GET besice info
-    // send data of the basice user 
-    // give him the user Home address
-    // give him the living currend address
-    // Phon number
+// improve this student controler
+// make that fronend ui
 
-    const { 
-        Living_address,
-        address,
+
+
+
+const studentRegister = asyncHandel(async (req, res) => {
+    const {
         mobileNumber,
-        collage ,
-        enrollmentDate,
-        course,
-        RollNumber
-    } = req.body
-
-    if (!Living_address && !address && !mobileNumber) {
-        throw new ApiError(400, "All fields are required to Register the student");
-    }
-
-    if ([ collage,enrollmentDate,course,RollNumber ].some((field) => field?.trim() === "")) {
-        throw new ApiError(400, "All fields are required to Register the student");
-    }
-    // TODO get console.log(address)
-    const Collage = await College.findById(collage)
-    if (!Collage) {
-        throw new ApiError("collage id is invalid")
-    }
-    
-    const student = await Student.create({
-        user:req.user?._id,
-        address: {
-            street: address.street || "No street",       
-            Village: address.Village || "No village",
-            city: address.city || "No city",
-            state: address.state || "No state",
-            postalCode: address.postalCode || "No postalCode"
-        },  
-        current_living_address: {
-            street: Living_address.street || "No street",       
-            Village: Living_address.Village || "No village",
-            city: Living_address.city || "No city",
-            state: Living_address.state|| "No state",
-            postalCode: Living_address.postalCode || "No postalCode"
-        },  
-        phoneNumber:mobileNumber,
-        enrollmentDate,
+        Collage,
         course,
         RollNumber,
-        college: Collage?._id 
-    });
+        Address,
+        Living_address
+    } = req.body;
 
- 
-   
-    // use aggregator to customize request
-    if (!student) {
-        throw new ApiError(401,"Student Well not creat ")
+    
+    if ([mobileNumber, Collage, course, RollNumber].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "All fields are required to register as a student");
     }
 
-    res.status(200).json(
-        new Apires(
-        200,
-        {student},"Student Rigster successFull"
-        )
-    )
+    if (!Address) {
+        throw new ApiError(401, "Address is required to register as a student");
+    }
 
-})  
+    if (!Living_address) {
+        throw new ApiError(401, "Living Address is required to register as a student");
+    }
+
+    
+    const studentAddress = await Addresses.create(Address);
+    const student_Living_address = await Addresses.create(Living_address);
+
+   
+    const student = await Student.create({
+        user: req.user._id,
+        mobileNumber,
+        college: Collage,
+        course,
+        RollNumber,
+        address: studentAddress._id,
+        current_living_address: student_Living_address._id
+    });
+   // await student.populate(['user','address', 'current_living_address','college']);
+    // agrigation pip line 
+
+   const stINFO = await Student.aggregate([
+      {
+        $match :{_id: student._id}
+      },
+      {
+        $lookup :{
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "USER",
+        }
+      },
+      {
+        $lookup: {
+            from: "addresses",
+            localField: "address",
+            foreignField: "_id",
+            as: "ADDRESS",
+        }
+      },
+      {
+        $lookup:{
+            from: "colleges",
+            localField:"college",
+            foreignField:"_id",
+            as:"COLLAGE"
+        }
+      },
+      {
+        $lookup:{
+            from: "addresses",
+            localField : "current_living_address",
+            foreignField: "_id",
+            as: "LIVING_ADDRESS"
+        }
+      },
+      {
+        $project: {
+            "USER.fullname": 1,
+            
+            "ADDRESS.countrie": 1, 
+            "ADDRESS.state": 1, 
+            "ADDRESS.District": 1, 
+            "ADDRESS.at": 1, 
+            "ADDRESS.po": 1, 
+            "ADDRESS.Village": 1, 
+            "ADDRESS.city": 1, 
+            "ADDRESS.pincode": 1, 
+            "ADDRESS.Nearer_Landmark": 1, 
+
+            "LIVING_ADDRESS.countrie": 1, 
+            "LIVING_ADDRESS.state": 1, 
+            "LIVING_ADDRESS.District": 1, 
+            "LIVING_ADDRESS.at": 1, 
+            "LIVING_ADDRESS.po": 1, 
+            "LIVING_ADDRESS.Village": 1, 
+            "LIVING_ADDRESS.city": 1, 
+            "LIVING_ADDRESS.pincode": 1, 
+            "LIVING_ADDRESS.Nearer_Landmark": 1, 
+            
+            "COLLAGE": 1,
+        }
+    }
+    ]);
+
+    
+    console.log(stINFO[0])
+
+
+    
+    return res.status(200).json(new Apires(200, student, "Student registered successfully"));
+});
+
 
 const StudentProfile = asyncHandel(async(req,res)=>{
-    const {_ID} = req.params
-    if(!_ID){
-        throw new ApiError(400,"student name is requred to profile")
-    }
-    console.log(_ID)
-    // const student = await Student.findOne({user:req.user?._id}).populate('user').select("-refreshToken")
 
-    const student = await Student.findById(_ID)
+  const {fullname} = req.body
+  
+  // find the student thought the username 
+  // papulat student->fullname _id 
+  //        call the user modle to get user id
+  //        
+  // agregation 
 
-
-    console.log(student)
-
-    console.log(student._id)
-   // get the student id  
-   // student_entities is a all the information about {collage , projects , Research_Paper, ProjectIdeas , Nots BusInfo , PublicInfo ,socialLinks}
-    const student_entities = await Student.aggregate([
-        {
-            $match:{
-                _id: new mongo.Types.ObjectId(_ID)
-            }
-        },{
-            $lookup:{
-                from: "colleges",
-                localField: "college",
-                foreignField:"_id",
-                as: "collageInfo"
-            }
-        },{
-            $project:{
-                
-                "collageInfo.name":1
-            }
-        }
-    ])
+    
 
 
-    if (!student_entities) {
-        throw new ApiError(401,"student_entities is not coming")
-    }
-    res.status(200).json(
-        new Apires(200,[
-            student,
-            student_entities[0]
-        ]
-        ,"Profile of the student sent successfull")
-    )
-
-
+    res.status(200).json( new Apires(201 , student ,"student data send successfull") )
 })
 
 const UpdateStudentProfile = asyncHandel(async(req,res)=>{
-    const { 
-        Living_address,
-        address,
-        mobileNumber,
-        collage ,
-        enrollmentDate,
-        course,
-        RollNumber
-    } = req.body
-
-    if (!Living_address && !address && !mobileNumber) {
-        throw new ApiError(400, "All fields are required to Register the student");
-    }
-
-    if ([ collage,enrollmentDate,course,RollNumber ].some((field) => field?.trim() === "")) {
-        throw new ApiError(400, "All fields are required to Register the student");
-    }
-    const student = await Student.findByIdAndUpdate(RollNumber,{
-        $set:{
-            Living_address,
-            address,
-            mobileNumber,
-            collage ,
-            enrollmentDate,
-            course,
-            RollNumber
-        }
-    })
-
-    if (!student) {
-        throw new ApiError(401,"student is not found ")
-    }
-
-    req.status(200).json(new Apires(200,student,"student update successfull"))
+   
 })
 
 

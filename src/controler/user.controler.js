@@ -8,10 +8,10 @@ import {v2 as cloudinary} from 'cloudinary'
 import jwt from 'jsonwebtoken'
 import  mongoose  from 'mongoose';
 
-const generate_AccessToken_RefreshToken =async (userid)=>{
+const generate_AccessToken_RefreshToken = async (userid)=>{
     try {
         const user = await User.findById(userid);
-        console.log(user);
+        
 
         const Access_Token = user.Genreat_Access_Token();
         const Refresh_Token = user.Genreat_Refresh_Token();
@@ -35,7 +35,7 @@ const Register_User = asyncHandel(async (req, res) => {
     // Exclude some attributes 👌
 
     const { usename, email, password, fullname } = req.body;
-    console.log(usename, email, password, fullname)
+   
 
     if ([usename, email, password, fullname].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to sign in");
@@ -62,7 +62,7 @@ const Register_User = asyncHandel(async (req, res) => {
             const folderName = 'user_profile_image'
             const subFoldersResult = await cloudinary.api.sub_folders(folderName);
     
-          console.log('Subfolders:', subFoldersResult.folders);
+         
           const resourcesResult = await cloudinary.api.resources({
             type: 'upload',
             resource_type: 'image',
@@ -98,11 +98,11 @@ const Login_User = asyncHandel(async (req,res)=>{
     // send this Token in cookie    
     // RETURN respons to login
     const {usename,email,password} = req.body
-    console.log(usename,email,password)
+    
     if(!email && !usename){
         throw new ApiError(400,"All fields are required to login")
     }
-    const Exuser =await User.findOne({$or:[{email},{usename}]})
+    const Exuser = await User.findOne({$or:[{email},{usename}]})
 
     if(!Exuser){
         throw new ApiError(400,"user well not Register so first sing in than trying to login")
@@ -297,58 +297,145 @@ const Password_Change = asyncHandel(async(req,res)=>{
     res.status(200).json(new Apires(200,{},"password change Successful"))
 })
 
-const AccessUser = asyncHandel(async(req,res)=>{
-    const {usename} = req.params
+const AccessUser = asyncHandel(async (req, res) => {
+    const { usename } = req.params; // Ensure this is passed in the route
+
+       // Access route parameter
+       const username = req.params.username;
+    
+       // Access query parameters
+       const queryParameters = req.query; // { key: value }
+       
+       // Access request headers
+       const headers = req.headers; // { 'header-name': 'value' }
+
+
+       console.log("Route Parameter (username):", username);
+       console.log("Query Parameters:", queryParameters);
+       console.log("Request Headers:", headers);
+
+
+
+
+    // Check if username is provided
     if (!usename) {
-        throw new ApiError(400,"user name is not coming")
+        throw new ApiError(400, "Username is not provided");
     }
-    const user = await User.findOne({usename:usename})
-    console.log(user)
+
+    // Find user in the database
+    const user = await User.findOne({ usename: usename });
+    console.log(user); // This will help you debug
+
+    // Check if user exists
     if (!user) {
-        throw new ApiError(401,"username invalid")
+        throw new ApiError(401, "Invalid username");
     }
-    // checking wather the user is rigster or not as student
-    const studentName = await User.aggregate([
+
+    // user flowers Info
+    const flowersInfo = await User.aggregate([
         {
             $match:{
-                _id: new mongoose.Types.ObjectId(req.user._id)
+                usename: usename?.toLowerCase()
             }
-        },{
+        },
+        {
             $lookup:{
-                from : "Students",
+                from:"Followers",
                 localField:"_id",
-                foreignField:"_id",
-                as:"Student",
-                pipeline:[{
-                    $lookup:{
-                        from:"Users",
-                        localField:"_id",
-                        foreignField:"usename",
-                        as:"UserName"
-                    }
-                }
-                ]
+                foreignField:"Follow",
+                as:"Follwing"
             }
-        },{
+        },
+        {
+            $lookup:{
+                from:"Followers",
+                localField:"_id",
+                foreignField:"Followers",
+                as:"Followed"
+            }
+        },
+        {
+            $addFields:{
+                FollingCount :{
+                    $size: "$Follwing",
+                },
+
+                FollowersCount:{
+                    $size:"$Followed"
+                },
+
+                isFollow:{
+                    $in:[req.user?._id,"$Follwing._id"],
+                },
+
+                isnotfollow:{
+                    $not: {$in:[req.user?._id , "$Followed._id"]}
+                }
+            }
+        },
+        {
             $project:{
-                "UserName.usename":1
+                FollingCount:1,
+                FollowersCount:1
             }
         }
     ])
 
-    if (!studentName || studentName == undefined) {
-        throw new ApiError(401,"student well not coming")
-    }
-    let isUserStudent = true
-    if (studentName != usename) {
-        isUserStudent = false
+    // Check whether the user is registered as a student
+    const studentName = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id),
+               
+            }
+        },
+        {
+            $lookup: {
+                from: "Students",
+                localField: "_id",
+                foreignField: "_id",
+                as: "Student",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "Users",
+                            localField: "_id",
+                            foreignField: "_id", 
+                            as: "UserName"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $project: {
+                "UserName.usename": 1,
+            }
+        }
+    ]);
+    
+    
+    if (!flowersInfo) {
+        throw new ApiError(401,"flowers Wel not found")
     }
 
-    res.status(200).json( 
-        new Apires(
-        200, {user , isUserStudent},"user sent successfull")
-    )
-})
+    if (!studentName || studentName.length === 0) {
+        throw new ApiError(401, "Student data is not available");
+    }
+
+   
+    let isUserStudent = false; 
+
+    if (studentName[0].UserName && studentName[0].UserName.length > 0) {
+        
+        isUserStudent = studentName[0].UserName[0].usename === usename;
+    }
+
+    res.status(200).json(
+        new Apires(200, { user, isUserStudent ,flowersInfo }, "User sent successfully")
+    );
+});
+
 
 export { 
             Register_User,

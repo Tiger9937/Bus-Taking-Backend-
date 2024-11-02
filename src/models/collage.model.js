@@ -4,19 +4,19 @@ import mongoose from 'mongoose';
 const busSchema = new mongoose.Schema({
   busNumber: {
     type: String,
-    required: true,
+    // required: true,
   },
   route: {
     type: String,
-    required: true,
+    // required: true,
   },
   driverName: {
     type: String,
-    required: true,
+    // required: true,
   },
   capacity: {
     type: Number,
-    required: true,
+    // required: true,
   },
 });
 
@@ -24,11 +24,11 @@ const busSchema = new mongoose.Schema({
 const collegeSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    // required: true,
   },
   Image: {
     type: String, // Can store the icon URL or name
-    required: true,
+    // required: true,
   },
   totalStudents: {
     type: mongoose.Schema.Types.ObjectId, 
@@ -36,37 +36,37 @@ const collegeSchema = new mongoose.Schema({
   },
   address: {
     type: String,
-    required: true,
+    // required: true,
   },
   nameFaculty: {
     type: String,
-    required: true,
+    // required: true,
   },
   totalFaculty: {
     type: Number, 
-    required: true,
+    // required: true,
   },
   establishedYear: {
     type: Number,
-    required: true,
+    // required: true,
   },
   contactDetails: {
     phone: {
       type: String,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   website: {
     type: String,
-    required: true,
+    // required: true,
   },
   description: {
     type: String,
-    required: true,
+    // required: true,
   },
   affiliatedUniversity: {
     type: String, 
