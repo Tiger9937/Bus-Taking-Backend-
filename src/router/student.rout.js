@@ -9,7 +9,10 @@ import {jwtVarify} from '../middlewares/auth.middlware.js';
 const StudentRout = Router()
 
 StudentRout.route("/studentRigster").post(jwtVarify,studentRegister);
+StudentRout.route("/UpdateStudentProfile").patch(jwtVarify,UpdateStudentProfile)
+
 StudentRout.route("/c/:_ID").get(jwtVarify,StudentProfile);
-StudentRout.route("/UpdateStudentProfile").post(jwtVarify,UpdateStudentProfile)
+StudentRout.route("/c/u/:username").get(jwtVarify,StudentProfile);
+StudentRout.route("/c/f/:fullname").get(jwtVarify,StudentProfile);
 
 export default StudentRout
