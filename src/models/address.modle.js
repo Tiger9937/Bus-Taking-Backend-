@@ -29,7 +29,7 @@ const addressSchema = new mongoose.Schema(
             type:String,
         },
         pincode:{
-            type:Number,
+            type:String,
             required: true
         },
         Nearer_Landmark:{
