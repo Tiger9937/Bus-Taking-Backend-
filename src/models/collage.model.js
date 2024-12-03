@@ -32,7 +32,7 @@ const collegeSchema = new mongoose.Schema({
   },
   totalStudents: {
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Student',
+    ref: 'Enrollment',
   },
   address: {
     type: String,

@@ -4,9 +4,9 @@ import { User } from '../models/user.model.js';
 import { cloudinary_FUNCTION, cloudinary_FUNCTION as UpLoader } from '../utils/cloudinary.js';
 import { Apires } from '../utils/Apires.js';
 import {Delete_file} from '../utils/deletfileCludinary.js';
-import {v2 as cloudinary} from 'cloudinary'
 import jwt from 'jsonwebtoken'
 import  mongoose  from 'mongoose';
+import {Pick_Random_Image} from '../utils/Random_image_piker.js'
 
 const generate_AccessToken_RefreshToken = async (userid)=>{
     try {
@@ -35,7 +35,7 @@ const Register_User = asyncHandel(async (req, res) => {
     // Exclude some attributes 👌
 
     const { usename, email, password, fullname } = req.body;
-   
+    console.log(req.files?.avatar[0]?.path)
 
     if ([usename, email, password, fullname].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to sign in");
@@ -51,32 +51,9 @@ const Register_User = asyncHandel(async (req, res) => {
         )
         throw new ApiError(409, "User already exists");
     }
-    cloudinary.config({ 
-        cloud_name: `${process.env.CLOUD_NAME}`, 
-        api_key: `${process.env.API_KEY}`, 
-        api_secret: `${process.env.API_SECRET}` 
-    });
-    // get the images 
-    const ImageCollection = async () => {
-        try {
-            const folderName = 'user_profile_image'
-            const subFoldersResult = await cloudinary.api.sub_folders(folderName);
+    // TODO:: Chenge the name as 'user_profile_image' to ''user_profile_images'
+    const Avter = await Pick_Random_Image('user_profile_image')
     
-         
-          const resourcesResult = await cloudinary.api.resources({
-            type: 'upload',
-            resource_type: 'image',
-            prefix: subFoldersResult.folders,
-            max_results: 100
-          });
-           return resourcesResult.resources
-      
-        } catch (error) {
-          console.log('Error:', error.message);
-        }
-      };
-      const images = await ImageCollection();
-      const Avter = images[Math.floor(Math.random()*8)*1].url
      await User.create({
         usename,
         email,

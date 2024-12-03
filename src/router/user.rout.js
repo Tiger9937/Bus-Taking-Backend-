@@ -10,6 +10,7 @@ import { Register_User,
 } from "../controler/user.controler.js";
 import {upload} from "../middlewares/multer.middlewares.js";
 import {jwtVarify} from '../middlewares/auth.middlware.js';
+
 const UserRouter = Router()
 
 UserRouter.route('/regidter').post(

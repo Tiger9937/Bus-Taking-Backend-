@@ -3,13 +3,13 @@ import {Student} from '../models/student.modle.js'
 import { ApiError } from '../utils/ApiError.js';
 import { Apires } from '../utils/Apires.js';
 import {Addresses} from '../models/address.modle.js'
+import {Enrollment} from '../models/enrollment.modle.js'
 import mongoose from 'mongoose';
-
-
 
 
 const studentRegister = asyncHandel(async (req, res) => { 
     const {
+        enrolmentDate,
         mobileNumber,
         Collage,
         course,
@@ -19,7 +19,7 @@ const studentRegister = asyncHandel(async (req, res) => {
     } = req.body;
 
     
-    if ([mobileNumber, Collage, course, RollNumber].some((field) => field?.trim() === "")) {
+    if ([mobileNumber, Collage, course, enrolmentDate, RollNumber].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to register as a student");
     }
 
@@ -34,7 +34,7 @@ const studentRegister = asyncHandel(async (req, res) => {
     
     const studentAddress = await Addresses.create(Address);
     const student_Living_address = await Addresses.create(Living_address);
-
+    const Enrollment_Date = await Enrollment.create(enrolmentDate)
    
     const student = await Student.create({
         user: req.user._id,
@@ -43,7 +43,8 @@ const studentRegister = asyncHandel(async (req, res) => {
         course,
         RollNumber,
         address: studentAddress._id,
-        current_living_address: student_Living_address._id
+        current_living_address: student_Living_address._id,
+        enrolmentDate:Enrollment_Date._id
     });
   
 
@@ -88,9 +89,23 @@ const studentRegister = asyncHandel(async (req, res) => {
       },
       { $unwind: {path: "$LIVING_ADDRESS" , preserveNullAndEmptyArrays: true}},
       {
+        $lookup:{
+            from: "enrollments",
+            localField : "enrollment",
+            foreignField: "_id",
+            as: "ENROLLMENT"
+        }
+      },
+      { $unwind: {path: "$ENROLLMENT" , preserveNullAndEmptyArrays: true}},
+      {
         $project: {
+          "course":1,
+          "RollNumber":1,
+          "mobileNumber":1,
+
             "USER.fullname": 1,
-            
+          
+            "ENROLLMENT.EnrollmentDate" : 1,
             
             "ADDRESS.countrie": 1, 
             "ADDRESS.state": 1, 
@@ -134,13 +149,13 @@ const studentRegister = asyncHandel(async (req, res) => {
 const StudentProfile = asyncHandel(async (req, res) => {
 
   const { _ID , username , fullname} = req.params; 
-
+  
   
   if (!_ID && !username && !fullname) {
     throw new ApiError(401, "Invalid request or User error Give the valid request[US:ERROR]");
 }
 
-  const AccessstudentId = await Student.aggregate([
+  const GetStudentID = await Student.aggregate([
     {
       $lookup:{
         from:"users",
@@ -163,7 +178,8 @@ const StudentProfile = asyncHandel(async (req, res) => {
 
   ])  
 
-  const id = _ID || AccessstudentId[0]._id;
+
+  const id = _ID || GetStudentID[0]._id;
 
   const student = await Student.aggregate([
     {
@@ -213,11 +229,15 @@ const StudentProfile = asyncHandel(async (req, res) => {
     {$unwind : {path:"$LIVING_ADDRESS" , preserveNullAndEmptyArrays:true}},
     {
       $project:{
-        
+        "course":1,
+        "RollNumber":1,
+        "mobileNumber":1,
+
         "USER.usename" :1,
         "USER.email" : 1,
         "USER.fullname":1,
 
+       
         "COLLAGE":1,
 
         "ADDRESS.countrie": 1, 
@@ -243,15 +263,12 @@ const StudentProfile = asyncHandel(async (req, res) => {
     }
   ])
 
-  
   if (!student) {
     throw new ApiError(400,"student well not fount at data base [DB:ERROR]")
   }
 
   return res.status(200).json(new Apires(200, student[0], "Student data retrieved successfully"));
 });
-
-
 
 const UpdateStudentProfile = asyncHandel(async(req,res)=>{
  
@@ -397,6 +414,9 @@ const student = await Student.aggregate([
   {$unwind : {path:"$LIVING_ADDRESS" , preserveNullAndEmptyArrays:true}},
   {
     $project:{
+      "course":1,
+      "RollNumber":1,
+      "mobileNumber":1,
       
       "USER.usename" :1,
       "USER.email" : 1,

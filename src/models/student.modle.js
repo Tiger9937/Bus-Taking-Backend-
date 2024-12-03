@@ -15,11 +15,13 @@ const studentSchema = new mongoose.Schema(
     required: true,
   },
 
-  // enrollment: {
-  //   type : mongoose.Schema.Types.ObjectId,
-  //   ref: 'Enrollment',
-  //   required : true
-  // },
+
+
+  enrollment: {
+    type : mongoose.Schema.Types.ObjectId,
+    ref: 'Enrollment',
+    required : true
+  },
   
   address:{
    type : mongoose.Schema.Types.ObjectId,

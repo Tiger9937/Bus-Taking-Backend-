@@ -18,7 +18,8 @@ const cloudinary_FUNCTION = async (Local_File_Path)=>{
             console.log("file has been successfully uploaded",fileRSPOS.url)
             setTimeout(()=>{
                 fs.unlinkSync(Local_File_Path);
-            }, 10000);
+                console.log("file delete success full")
+            }, 2000);
             return fileRSPOS
     } catch (error) {
             fs.unlink(Local_File_Path)
