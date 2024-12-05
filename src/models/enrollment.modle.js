@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
+
 const enrollmentSchema = new mongoose.Schema({
+  user: {
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'User',
+  },
   EnrollmentDate:{
     type: Date,
     require: true
@@ -8,7 +13,6 @@ const enrollmentSchema = new mongoose.Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Student', 
-    required: true,
   },
   college: {
     type: mongoose.Schema.Types.ObjectId,

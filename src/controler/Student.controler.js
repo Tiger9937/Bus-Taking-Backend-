@@ -1,6 +1,7 @@
 import {asyncHandel} from '../utils/asyncHandaler.js'
 import {Student} from '../models/student.modle.js'
 import { ApiError } from '../utils/ApiError.js';
+import { ApiWarning } from '../utils/ApiWorn.js'
 import { Apires } from '../utils/Apires.js';
 import {Addresses} from '../models/address.modle.js'
 import {Enrollment} from '../models/enrollment.modle.js'
@@ -14,39 +15,53 @@ const studentRegister = asyncHandel(async (req, res) => {
         Collage,
         course,
         RollNumber,
+        DOB,
+        age,
         Address,
         Living_address
     } = req.body;
-
+    console.log("dob and age" ,DOB , age)
     
     if ([mobileNumber, Collage, course, enrolmentDate, RollNumber].some((field) => field?.trim() === "")) {
-        throw new ApiError(400, "All fields are required to register as a student");
+      throw new ApiError(400, "All fields are required to register as a student");
     }
-
+    
     if (!Address) {
-        throw new ApiError(401, "Address is required to register as a student");
+      throw new ApiError(401, "Address is required to register as a student");
     }
-
+    
     if (!Living_address) {
-        throw new ApiError(401, "Living Address is required to register as a student");
+      throw new ApiError(401, "Living Address is required to register as a student");
     }
-
+    
     
     const studentAddress = await Addresses.create(Address);
     const student_Living_address = await Addresses.create(Living_address);
-    const Enrollment_Date = await Enrollment.create(enrolmentDate)
-   
+
+    const Enrollment_obj = await Enrollment.create({
+      user: req.user._id,
+      EnrollmentDate:enrolmentDate,
+      college:Collage,
+    })
+
+    if (Enrollment_obj.user == req.user._id) {
+      throw new ApiWarning(304 , "Student allrady exist ")
+    }
+
     const student = await Student.create({
         user: req.user._id,
-        mobileNumber,
         college: Collage,
+        mobileNumber,
         course,
         RollNumber,
+        DOB,
+        age,
         address: studentAddress._id,
         current_living_address: student_Living_address._id,
-        enrolmentDate:Enrollment_Date._id
+        enrollment:Enrollment_obj._id
     });
   
+
 
    const AdditionalInfo = await Student.aggregate([
       {
@@ -134,8 +149,14 @@ const studentRegister = asyncHandel(async (req, res) => {
     ]);
 
    
-
+    
     const studentinfo =  {...student.toObject() , ...AdditionalInfo[0]}
+
+  await Enrollment.findByIdAndUpdate(Enrollment_obj._id,{$set:{student:studentinfo._id}})
+   
+  
+
+
     // delete this data's for overcome sending unused data 
     delete studentinfo.user;
     delete studentinfo.college;
@@ -143,6 +164,7 @@ const studentRegister = asyncHandel(async (req, res) => {
     delete studentinfo.current_living_address;
 
     
+
     return res.status(200).json(new Apires(200, studentinfo, "Student registered successfully"));
 });
 

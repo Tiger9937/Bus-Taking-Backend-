@@ -45,6 +45,14 @@ const studentSchema = new mongoose.Schema(
     type:Number,
     required: true,
   },
+  DOB:{
+    type:String,
+    required: true,
+  },
+  age:{
+    type:Number,
+    required: true,
+  },
   projects:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project',

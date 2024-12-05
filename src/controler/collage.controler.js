@@ -44,14 +44,8 @@ const Access_All_Collage = asyncHandel(async (req, res) => {
 
     const GetAllCollage = await College.find()
 
-    
-    const collegesObj = GetAllCollage.reduce((acc, college) => {
-        acc[college._id] = college;
-        return acc;
-    }, {});
-
     res.status(200).json(
-        new Apires(200 , collegesObj ,"access All collage successfull")
+        new Apires(200 , GetAllCollage ,"access All collage successfull")
     )
 
 });
