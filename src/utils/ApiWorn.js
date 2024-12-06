@@ -1,4 +1,4 @@
-class ApiWarning extends Warn {
+class ApiWarning extends Error {
     constructor(
         statusCode,
         message = "Something might not be right",
@@ -14,7 +14,7 @@ class ApiWarning extends Warn {
         if (stack) {
             this.stack = stack;
         } else {
-            Warn.captureStackTrace(this, this.constructor);
+            Error.captureStackTrace(this, this.constructor);
         }
     }
 }

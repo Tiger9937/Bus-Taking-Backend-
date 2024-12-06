@@ -17,12 +17,13 @@ const studentRegister = asyncHandel(async (req, res) => {
         RollNumber,
         DOB,
         age,
+        Gender,
         Address,
         Living_address
     } = req.body;
     console.log("dob and age" ,DOB , age)
     
-    if ([mobileNumber, Collage, course, enrolmentDate, RollNumber].some((field) => field?.trim() === "")) {
+    if ([mobileNumber, Collage, course, enrolmentDate, RollNumber , Gender].some((field) => field?.trim() === "")) {
       throw new ApiError(400, "All fields are required to register as a student");
     }
     
@@ -33,7 +34,15 @@ const studentRegister = asyncHandel(async (req, res) => {
     if (!Living_address) {
       throw new ApiError(401, "Living Address is required to register as a student");
     }
-    
+
+
+    // trying to find the user inside of the student modle
+    const Exciting_User = await Student.findOne({user:req.user._id})
+    console.log("User Allrady exciting->" , Exciting_User)
+
+    if (Exciting_User) {
+      throw new ApiWarning(304 , "Student allrady exist ")
+    }
     
     const studentAddress = await Addresses.create(Address);
     const student_Living_address = await Addresses.create(Living_address);
@@ -44,9 +53,7 @@ const studentRegister = asyncHandel(async (req, res) => {
       college:Collage,
     })
 
-    if (Enrollment_obj.user == req.user._id) {
-      throw new ApiWarning(304 , "Student allrady exist ")
-    }
+    
 
     const student = await Student.create({
         user: req.user._id,
@@ -56,6 +63,7 @@ const studentRegister = asyncHandel(async (req, res) => {
         RollNumber,
         DOB,
         age,
+        gender:Gender,
         address: studentAddress._id,
         current_living_address: student_Living_address._id,
         enrollment:Enrollment_obj._id
