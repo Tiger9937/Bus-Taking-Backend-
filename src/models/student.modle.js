@@ -14,9 +14,7 @@ const studentSchema = new mongoose.Schema(
     ref: 'College',
     required: true,
   },
-
-
-
+  
   enrollment: {
     type : mongoose.Schema.Types.ObjectId,
     ref: 'Enrollment',

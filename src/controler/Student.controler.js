@@ -488,6 +488,7 @@ res.status(200).json(new Apires(200 , student ,"Student successfully updated"))
 })  
 
 
+
 export{
     StudentProfile,
     studentRegister,

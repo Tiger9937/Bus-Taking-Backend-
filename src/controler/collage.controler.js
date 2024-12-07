@@ -5,23 +5,35 @@ import {College} from '../models/collage.model.js'
 import {Is_Image_Available} from '../middlewares/IsFileavailable.js'
 
 const CollageRigster = asyncHandel(async (req,res)=>{
-    const {name} = req.body
-    let image
+    // TODO::handle Arrays in preparway
+    // coursesOffered is giveing ass to array
+    const {name ,establishedYear , phone , email , website , description , affiliatedUniversityName , coursesOffered , 
+        BusName} = req.body
 
-    
     if (!name) {
         throw new ApiError(400,"collage name is requred");
     }
 
-    image = await Is_Image_Available(req)
+    // create DataBase for other modles all thear functions are return modle id 
+    const total_Collage_student = '' ;
+    const address = '' ;
+    const Faculty = '' ;
+    const affiliatedUniversity = '' ;
+    const bus = '';
 
+    // concatenate in one object 
+    const contactDetails = {phone , email};
+
+    let image = await Is_Image_Available(req)
 
     const collage = await College.create({
         name:name,
-        Image:image.url
+        Loga:image.url,
+        coverImage,
+        totalStudents,
         }
     )
-    console.log(collage)
+
 
     if (!collage) {
         throw new ApiError(401, "Invalid collage name")

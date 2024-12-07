@@ -1,80 +1,67 @@
 import mongoose from 'mongoose';
 
-// Define a Bus schema for storing bus-related data
-const busSchema = new mongoose.Schema({
-  busNumber: {
-    type: String,
-    // required: true,
-  },
-  route: {
-    type: String,
-    // required: true,
-  },
-  driverName: {
-    type: String,
-    // required: true,
-  },
-  capacity: {
-    type: Number,
-    // required: true,
-  },
-});
-
-// Define the College schema
 const collegeSchema = new mongoose.Schema({
   name: {
     type: String,
-    // required: true,
+    required: true,
   },
-  Image: {
-    type: String, // Can store the icon URL or name
-    // required: true,
+  Logo: {
+    type: String, 
+    required: true,
+  },
+  coverImage:{
+    type: String, 
   },
   totalStudents: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Enrollment',
   },
   address: {
-    type: String,
-    // required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Addresses'
   },
-  nameFaculty: {
-    type: String,
-    // required: true,
-  },
-  totalFaculty: {
-    type: Number, 
-    // required: true,
+  Faculty: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref:'Facultie'
   },
   establishedYear: {
     type: Number,
-    // required: true,
+    required: true,
+  },
+  ownby:{
+    type: String,
+    require: true
   },
   contactDetails: {
     phone: {
       type: String,
-      // required: true,
+      required: true,
     },
     email: {
       type: String,
-      // required: true,
+      required: true,
     },
   },
   website: {
     type: String,
-    // required: true,
   },
   description: {
     type: String,
-    // required: true,
+    required: true,
   },
   affiliatedUniversity: {
-    type: String, 
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'University'
   },
   coursesOffered: {
     type: [String], 
+    require: true
   },
-  buses: [busSchema], 
+  buses: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Buse'
+  }, 
+
 },{timestamps:true});
 
 export const College = mongoose.model('College', collegeSchema);
