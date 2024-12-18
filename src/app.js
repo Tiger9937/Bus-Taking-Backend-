@@ -30,9 +30,10 @@ app.use(cookieParser());
 import UserRouter from './router/user.rout.js';
 import StudentRout from './router/student.rout.js'
 import CollageRoute from './router/collage.rout.js'
+import FacultyRoute from './router/Faculty.rout.js'
 
 app.use('/api/v1/users', UserRouter,StudentRout);
 app.use('/api/v1/student', StudentRout);
 app.use('/api/v1/collage', CollageRoute);
-
+app.use('/api/v1/faculty', FacultyRoute);
 export { app };

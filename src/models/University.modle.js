@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose';
 
-const Universityschema = new mongoose.schema({
+const Universityschema = new mongoose.Schema({
       name:{
         type: String,
         required: true,
@@ -15,5 +15,6 @@ const Universityschema = new mongoose.schema({
       },
 
 })
-const University = mongoose.model('University', Universityschema)
-export default University;
+const University = mongoose.model('Universities', Universityschema)
+export {University}
+

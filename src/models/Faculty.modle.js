@@ -53,7 +53,8 @@ const FacultySchema = new mongoose.Schema(
       match: [/^\d{10}$/, 'Please enter a valid 10-digit phone number'],
     },
     address: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Addresses',
     },
     joiningDate: {
       type: Date,

@@ -35,7 +35,7 @@ const Register_User = asyncHandel(async (req, res) => {
     // Exclude some attributes 👌
 
     const { usename, email, password, fullname } = req.body;
-    console.log(req.files?.avatar[0]?.path)
+    
 
     if ([usename, email, password, fullname].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required to sign in");
@@ -52,7 +52,7 @@ const Register_User = asyncHandel(async (req, res) => {
         throw new ApiError(409, "User already exists");
     }
     // TODO:: Chenge the name as 'user_profile_image' to ''user_profile_images'
-    const Avter = await Pick_Random_Image('user_profile_image')
+    const Avter = await Pick_Random_Image('user_profile_images')
     
      await User.create({
         usename,

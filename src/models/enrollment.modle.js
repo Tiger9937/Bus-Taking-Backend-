@@ -2,13 +2,12 @@ import mongoose from 'mongoose';
 
 
 const enrollmentSchema = new mongoose.Schema({
-  user: {
-    type:mongoose.Schema.Types.ObjectId,
-    ref:'User',
+  APP_Rigster_Faculty: {
+       type: mongoose.Schema.Types.ObjectId,
+       ref:'Facultie'
   },
   EnrollmentDate:{
     type: Date,
-    require: true
   },
   student: {
     type: mongoose.Schema.Types.ObjectId,
@@ -17,7 +16,7 @@ const enrollmentSchema = new mongoose.Schema({
   college: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'College', 
-    required: true,
+    
   },
 });
 

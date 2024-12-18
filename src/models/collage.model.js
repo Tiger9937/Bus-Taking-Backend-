@@ -12,36 +12,55 @@ const collegeSchema = new mongoose.Schema({
   coverImage:{
     type: String, 
   },
-  totalStudents: {
+  // this entity Show how many Students Registered in this application in Particular College
+  total_APP_Rigster_Students: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Enrollment',
   },
+
+  totalStudents: {
+    type: Number, 
+    require: true
+  },
+
   address: {
     type: mongoose.Schema.Types.ObjectId,
     ref:'Addresses'
   },
-  Faculty: {
+  // this entity Show how many Faculty Registered in this application in Particular College
+  APP_Rigster_Faculty: {
      type: mongoose.Schema.Types.ObjectId,
      ref:'Facultie'
   },
+
+  TotalFaculty: {
+    type: Number, 
+    require: true
+  },
+
   establishedYear: {
     type: Number,
     required: true,
   },
-  ownby:{
+
+  ownby: {
     type: String,
-    require: true
+    enum: ['private', 'gov'], // Limits to specific values
+    required: true, // Field is mandatory
   },
-  contactDetails: {
+  ownername:{
+    type: String,
+  },
+  // contactDetails
     phone: {
-      type: String,
+      type: Number,
       required: true,
     },
     email: {
       type: String,
       required: true,
     },
-  },
+  
   website: {
     type: String,
   },
