@@ -48,7 +48,6 @@ const studentRegister = asyncHandel(async (req, res) => {
     const student_Living_address = await Addresses.create(Living_address);
 
     const Enrollment_obj = await Enrollment.create({
-      user: req.user._id,
       EnrollmentDate:enrolmentDate,
       college:Collage,
     })

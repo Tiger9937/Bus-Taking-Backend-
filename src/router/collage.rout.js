@@ -9,7 +9,7 @@ import {
 import { upload } from '../middlewares/multer.middlewares.js';
 
 const CollageRoute = Router()
-
+// TODO:: Add for handle cover image 
 CollageRoute.route("/collageRigster").post(upload.fields(
     [
         {

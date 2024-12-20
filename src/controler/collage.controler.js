@@ -27,9 +27,11 @@ const Collage_Login = asyncHandel(async (res , req)=>{
 const CollageRigster = asyncHandel(async (req,res)=>{
    const {name ,establishedYear , phone , email , totalStudents , TotalFaculty , website , description , affiliatedUniversityName , coursesOffered , 
          BusName , collageAddress,ownby,ownername } = stringTojson(req)
-        if (condition) {
+
+
+        // if (condition) {
             
-        }
+        // }
 
 
         if (!collageAddress) {
@@ -63,7 +65,7 @@ const CollageRigster = asyncHandel(async (req,res)=>{
         if (!affiliatedUniversity) {
             throw new ApiError(401,"affiliatedUniversity is not created")
         }
-        console.log(affiliatedUniversity)
+        
     let image = await Is_Image_Available(req.files.profile_image[0].path)
 
 

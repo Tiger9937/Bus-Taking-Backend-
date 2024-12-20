@@ -26,6 +26,7 @@ const FacultySchema = new mongoose.Schema(
     },
     Image: {
       type: String, 
+      require: true
     },
     bio: {
       type: String,
@@ -52,6 +53,11 @@ const FacultySchema = new mongoose.Schema(
       type: String,
       match: [/^\d{10}$/, 'Please enter a valid 10-digit phone number'],
     },
+    enrollmentDate: {
+      type : mongoose.Schema.Types.ObjectId,
+      ref: 'Enrollment',
+      required : true
+    },
     address: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Addresses',
@@ -59,6 +65,7 @@ const FacultySchema = new mongoose.Schema(
     joiningDate: {
       type: Date,
       default: Date.now,
+      
     },
     yearofstay:{
         type:Number,
@@ -68,4 +75,6 @@ const FacultySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Faculty = mongoose.model('Faculty', FacultySchema);
+const Faculty = mongoose.model('Faculty', FacultySchema);
+
+export{Faculty}
