@@ -5,7 +5,7 @@ const FlowSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Student'
     },
-    Flowers:{
+    Flowing:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Student'
     }

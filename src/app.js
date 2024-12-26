@@ -31,9 +31,14 @@ import UserRouter from './router/user.rout.js';
 import StudentRout from './router/student.rout.js'
 import CollageRoute from './router/collage.rout.js'
 import FacultyRoute from './router/Faculty.rout.js'
-
-app.use('/api/v1/users', UserRouter,StudentRout);
+import Flowrouter from './router/flow.rout.js'
+import SocialMidiaRoute from './router/SocialMidia.rout.js'
+// StudentRout
+app.use('/api/v1/users', UserRouter);
 app.use('/api/v1/student', StudentRout);
 app.use('/api/v1/collage', CollageRoute);
 app.use('/api/v1/faculty', FacultyRoute);
+app.use('/api/v1/flow', Flowrouter);
+app.use('/api/v1/midia' , SocialMidiaRoute)
+
 export { app };

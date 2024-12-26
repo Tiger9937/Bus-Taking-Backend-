@@ -519,23 +519,23 @@
                },
                {
 
-                    "UniversityName":" ",
-                   "UniversityImg":" ",
-                   "Universityurl":" "
+                    "UniversityName":"International Institute of Information Technology",
+                   "UniversityImg":"data:image/jpeg;base64,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",
+                   "Universityurl":"https://www.iiit-bh.ac.in/"
     
                },
                {
 
-                    "UniversityName":" ",
-                   "UniversityImg":" ",
-                   "Universityurl":" "
+                    "UniversityName":"Odisha University of Health Sciences",
+                   "UniversityImg":"https://ouhs.ac.in/upload/ouhslogo_new.png",
+                   "Universityurl":"https://ouhs.ac.in/"
     
                },
                {
 
-                    "UniversityName":" ",
-                   "UniversityImg":" ",
-                   "Universityurl":" "
+                    "UniversityName":"Odisha University of Technology and Research",
+                   "UniversityImg":"https://www.cet.edu.in/images/logo.png",
+                   "Universityurl":"https://cet.edu.in/"
     
                },
                {
@@ -589,20 +589,65 @@
     
                },
                {
-                    // 9/24
+                    
+                    "UniversityName":"AIPH University",
+                   "UniversityImg":"https://www.aiph.ac.in/assets/img/AIPH_whiteborder.png",
+                   "Universityurl":"http://www.aiph.ac.in/"
+    
+               },
+               {
+                    
+                    "UniversityName":"Silicon University",
+                   "UniversityImg":"https://silicon.ac.in/wp-content/themes/sit/assets/img/logo-7.png",
+                   "Universityurl":"https://silicon.ac.in/"
+    
+               },
+               {
+                    
                     "UniversityName":" ",
                    "UniversityImg":" ",
                    "Universityurl":" "
     
+               },
+               {
+                    
+                    "UniversityName":" ",
+                   "UniversityImg":" ",
+                   "Universityurl":" "
+    
+               },
+               {
+                    
+                    "UniversityName":"C V Raman University",
+                   "UniversityImg":" ",
+                   "Universityurl":"https://cgu-odisha.ac.in/"
+    
                }
           ],
-               "Deemed" :{
+               "Deemed" :[
+          {
           
-          "UniversityName":" ",
+               "UniversityName":"Kalinga Institute of Industrial Technology, Bhubaneswar",
+               "UniversityImg":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReMpidLZ-bGC04nFEGhTlMeU_psNZBlx6iBc_v3DKQWHGmU767HwN8comL284ULhA7Qgc&usqp=CAU",
+               "Universityurl":"https://kiit.ac.in/"
+
+          },
+          {
+          
+               "UniversityName":" ",
                "UniversityImg":" ",
                "Universityurl":" "
 
-},
+          },
+          {
+          
+               "UniversityName":" ",
+               "UniversityImg":" ",
+               "Universityurl":" "
+
+          }
+
+     ],
                "Central" :{
           
           "UniversityName":" ",
@@ -614,9 +659,9 @@
         },
         "Keonjhar":{"Public":{
 
-                "UniversityName":" ",
-               "UniversityImg":" ",
-               "Universityurl":" "
+                "UniversityName":"Dharanidhar University",
+               "UniversityImg":"https://dduniversity.ac.in/wp-content/uploads/2024/02/DD-Logo-2.png",
+               "Universityurl":"https://dduniversity.ac.in/"
 
      },
                 "Private" :{
@@ -644,9 +689,9 @@
         },
         "Kalahandi":{"Public":{
 
-                "UniversityName":" ",
-               "UniversityImg":" ",
-               "Universityurl":" "
+                "UniversityName":"Maa Manikeshwari University",
+               "UniversityImg":"https://kuwebsite.s3.amazonaws.com/kuwebsite/img/mmu-small-n.jpg",
+               "Universityurl":"https://kalahandiuniversity.ac.in/"
 
      },
                 "Private" :{
@@ -704,9 +749,9 @@
         },
         "Koraput":{"Public":{
 
-                "UniversityName":" ",
-               "UniversityImg":" ",
-               "Universityurl":" "
+                "UniversityName":"Vikram Deb University",
+               "UniversityImg":"https://www.vikramdebcollege.ac.in/1636094314.png",
+               "Universityurl":"https://www.vikramdebcollege.ac.in/"
 
      },
                 "Private" :{
@@ -794,9 +839,9 @@
         },
         "Mayurbhanj":{"Public":{
 
-                "UniversityName":" ",
-               "UniversityImg":" ",
-               "Universityurl":" "
+                "UniversityName":"Maharaja Sriram Chandra Bhanja Deo University",
+               "UniversityImg":"https://nou.nic.in/title112.png",
+               "Universityurl":"http://www.nou.nic.in/"
 
      },
                 "Private" :{
@@ -912,13 +957,14 @@
 }
 
         },
-        "Puri":{"Public":{
+        "Puri":{"Public":
+          {
 
-                "UniversityName":" ",
-               "UniversityImg":" ",
-               "Universityurl":" "
+                "UniversityName":"Odia University",
+               "UniversityImg":"https://odiauniversity.ac.in/design/images/header_footer_logo/1817410066824817.png",
+               "Universityurl":"https://odiauniversity.ac.in/en"
 
-     },
+          },
                 "Private" :{
           
             "UniversityName":" ",
@@ -972,13 +1018,31 @@
 }
 
         },
-        "Sambalpur":{"Public":{
+        "Sambalpur":{"Public":[
+          {
 
-                "UniversityName":" ",
-               "UniversityImg":" ",
-               "Universityurl":" "
+                "UniversityName":"Sambalpur University",
+               "UniversityImg":"https://www.suniv.ac.in/images/logo.png",
+               "Universityurl":"http://www.suniv.ac.in/"
 
-     },
+          },
+          {
+
+                "UniversityName":"Gangadhar Meher University",
+               "UniversityImg":"https://www.gmuniversity.ac.in/assets/image/logos/Logo.png",
+               "Universityurl":"https://www.gmuniversity.ac.in/"
+
+          },
+          {
+
+                "UniversityName":"Odisha State Open University",
+               "UniversityImg":"https://www.osou.ac.in/images/osou-logo-text.png",
+               "Universityurl":"https://www.osou.ac.in/"
+
+          }
+]
+     
+     ,
                 "Private" :{
           
             "UniversityName":" ",

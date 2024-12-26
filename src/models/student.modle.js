@@ -55,6 +55,15 @@ const studentSchema = new mongoose.Schema(
     type:String,
     require:true
   },
+  flowingCount:{
+    type:Number,
+    require:true
+  },
+  flowsCount:{
+    type:Number,
+    require:true
+  },
+
   projects:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project',

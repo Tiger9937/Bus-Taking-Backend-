@@ -309,54 +309,6 @@ const AccessUser = asyncHandel(async (req, res) => {
     }
 
     // user flowers Info
-    const flowersInfo = await User.aggregate([
-        {
-            $match:{
-                usename: usename?.toLowerCase()
-            }
-        },
-        {
-            $lookup:{
-                from:"Followers",
-                localField:"_id",
-                foreignField:"Follow",
-                as:"Follwing"
-            }
-        },
-        {
-            $lookup:{
-                from:"Followers",
-                localField:"_id",
-                foreignField:"Followers",
-                as:"Followed"
-            }
-        },
-        {
-            $addFields:{
-                FollingCount :{
-                    $size: "$Follwing",
-                },
-
-                FollowersCount:{
-                    $size:"$Followed"
-                },
-
-                isFollow:{
-                    $in:[req.user?._id,"$Follwing._id"],
-                },
-
-                isnotfollow:{
-                    $not: {$in:[req.user?._id , "$Followed._id"]}
-                }
-            }
-        },
-        {
-            $project:{
-                FollingCount:1,
-                FollowersCount:1
-            }
-        }
-    ])
 
     // Check whether the user is registered as a student
     const studentName = await User.aggregate([
@@ -392,9 +344,6 @@ const AccessUser = asyncHandel(async (req, res) => {
     ]);
     
     
-    if (!flowersInfo) {
-        throw new ApiError(401,"flowers Wel not found")
-    }
 
     if (!studentName || studentName.length === 0) {
         throw new ApiError(401, "Student data is not available");
@@ -409,7 +358,7 @@ const AccessUser = asyncHandel(async (req, res) => {
     }
 
     res.status(200).json(
-        new Apires(200, { user, isUserStudent ,flowersInfo }, "User sent successfully")
+        new Apires(200, { user, isUserStudent }, "User sent successfully")
     );
 });
 
