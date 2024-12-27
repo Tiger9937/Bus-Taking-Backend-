@@ -54,7 +54,6 @@ const unfollowStudent = asyncHandel(async (req  ,res)=>{
     res.status(200).json({ message: "Student Successfully unfollow" });
 })
 
-
 const getFollowers = asyncHandel(async (req , res)=>{
     // thougth flowing we get the flowers 
     // used to access all the flowes it means how many student are flowing that particular student 
@@ -88,7 +87,6 @@ const getFollowing = asyncHandel(async (req , res)=>{
     res.status(200).json(new Apires(200,AllFlowers,"Get all flowers Successfully"))
 
 })
-
 
 const getCounts = asyncHandel(async (req , res)=>{
     const {flowingstudentid} = req.query
