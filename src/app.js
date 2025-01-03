@@ -41,6 +41,6 @@ app.use('/api/v1/collage', CollageRoute);
 app.use('/api/v1/faculty', FacultyRoute);
 app.use('/api/v1/flow', Flowrouter);
 app.use('/api/v1/midia' , SocialMidiaRoute);
-app.use('/api/v1/midia' , CommentRoute);
+app.use('/api/v1/comment' , CommentRoute);
 
 export { app };

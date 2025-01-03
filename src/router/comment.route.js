@@ -7,6 +7,6 @@ CommentRoute.route("/CreateComment").post(CreateComment)
 CommentRoute.route("/removedComment").get(removedComment)
 // CommentRoute.route("/AccessAllComments").get(AccessAllComments)
 CommentRoute.route("/AccessParticulaeComment").get(AccessParticulaeComment)
-CommentRoute.route("/UpdateParticularComment").get(UpdateParticularComment)
+CommentRoute.route("/UpdateParticularComment").patch(UpdateParticularComment)
 
 export default CommentRoute
