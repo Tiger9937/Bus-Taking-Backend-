@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose';
 
-const socialLinks = new mongoose.Schema({
+const socialLinkSchema = new mongoose.Schema({
     StudentId:{
       type: mongoose.Schema.Types.ObjectId,
       ref:'Student'
@@ -20,9 +20,9 @@ const socialLinks = new mongoose.Schema({
         required: true,
       }
     }
-    ]
+  ]
     
 })
 
-export const socialMedias = mongoose.model('socialMedias', socialLinks)
+export const socialMedias = mongoose.model('socialMedias', socialLinkSchema)
 

@@ -34,6 +34,10 @@ import FacultyRoute from './router/Faculty.rout.js'
 import Flowrouter from './router/flow.rout.js'
 import SocialMidiaRoute from './router/SocialMidia.rout.js'
 import CommentRoute from './router/comment.route.js'
+import ProjectRoute from './router/project.rout.js'
+import LikeRout from './router/likes.rout.js'
+import Notification from './router/notification.rout.js'
+
 // StudentRout
 app.use('/api/v1/users', UserRouter);
 app.use('/api/v1/student', StudentRout);
@@ -42,5 +46,8 @@ app.use('/api/v1/faculty', FacultyRoute);
 app.use('/api/v1/flow', Flowrouter);
 app.use('/api/v1/midia' , SocialMidiaRoute);
 app.use('/api/v1/comment' , CommentRoute);
+app.use('/api/v1/Project' , ProjectRoute);
+app.use('/api/v1/Likes',LikeRout);
+app.use('/api/v1/notify',Notification)
 
 export { app };

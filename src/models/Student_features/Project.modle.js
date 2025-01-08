@@ -21,9 +21,20 @@ const projectSchema = new mongoose.Schema({
         default: 'Planned'
     },
     technologiesUsed: {
-        type: [String], // Array of strings to list technologies
-        required: true,
-        text: [string]
+        tech:[{
+            title:{
+                type: String,
+                required: true,
+            },
+            platform_Img: {
+              type: String,
+              required: true,
+            },
+            url: {
+              type: String,
+              required: true,
+            }
+          }]        
     },
     startDate: {
         type: Date,
@@ -41,6 +52,9 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
+    totalmember:{
+        type:Number
+    },
     goals: {
         type: String,
         required: true
@@ -54,16 +68,30 @@ const projectSchema = new mongoose.Schema({
         required: false
     },
     rating: {
-        type: [svg],
-        required: false
+        type: Number,
+        required: false,
+        min: 0,
+        max: 5
     },
-    comments: {
+    notification:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'comments'
+        ref: 'notification'
+    },
+    TotalLike:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Like'
+    },
+    TotalDisLike:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Like'
+    },
+    comment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'comment'
     },
     socialLinks: {
-        type: [String],
-        required: false
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'socialMedias'
     }
 },{timestamps:true});
 
