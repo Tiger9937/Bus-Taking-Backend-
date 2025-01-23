@@ -9,7 +9,8 @@ const projectSchema = new mongoose.Schema({
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'Student',
+        required: true
     },
     category: {
         type: String,
@@ -20,22 +21,26 @@ const projectSchema = new mongoose.Schema({
         enum: ['Ongoing', 'Completed', 'Planned'],
         default: 'Planned'
     },
-    technologiesUsed: {
-        tech:[{
-            title:{
-                type: String,
-                required: true,
-            },
-            platform_Img: {
-              type: String,
-              required: true,
-            },
-            url: {
-              type: String,
-              required: true,
-            }
-          }]        
+    thumbnail:{
+        ttype: String,
+        required: true
     },
+    technologiesUsed: {
+        tech: [{
+          title: {
+            type: String,
+            required: true
+          },
+          platform_Img: {
+            type: String,
+            required: true
+          },
+          url: {
+            type: String,
+            required: true
+          }
+        }]
+      },
     startDate: {
         type: Date,
         required: true
@@ -55,7 +60,7 @@ const projectSchema = new mongoose.Schema({
     totalmember:{
         type:Number
     },
-    goals: {
+    goal: {
         type: String,
         required: true
     },

@@ -13,8 +13,6 @@ export const jwtVarify = asyncHandel(async function (req,_,next) {
     // RETURN the user using res 📤👌
 
 try {
-        
-
         const cookie = await req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer " , "")
         if(!cookie){
             throw new ApiError(401,"User not login")

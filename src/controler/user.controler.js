@@ -20,7 +20,7 @@ const generate_AccessToken_RefreshToken = async (userid)=>{
         await user.save({ validateBeforeSave: false });
         return { Access_Token, Refresh_Token };
     } catch (err) {
-        console.log(err);
+        
         throw new ApiError(401, "Token will not be generated");
     }
 }
@@ -205,7 +205,7 @@ const UpDateAvatar_image = asyncHandel(async (req,res)=>{
     const userforoldimage = await User.findById(req.user?._id)
     const Oldimage_path = userforoldimage.avatar
     const delete_file  = await Delete_file(Oldimage_path)
-    console.log(delete_file);
+    
 
 
     const user = await User.findByIdAndUpdate(req.user?._id,{
@@ -264,7 +264,7 @@ const Password_Change = asyncHandel(async(req,res)=>{
     
 
     const varifiedPasword =await user.isPasswordCorrect_toChange(oldpassword) // this well return true or false 
-    console.log(varifiedPasword)
+    
     
     if (!varifiedPasword) {
         throw new ApiError(401, "Old password is incorrect");
@@ -285,15 +285,6 @@ const AccessUser = asyncHandel(async (req, res) => {
        
        // Access request headers
        const headers = req.headers; // { 'header-name': 'value' }
-
-
-       console.log("Route Parameter (username):", username);
-       console.log("Query Parameters:", queryParameters);
-       console.log("Request Headers:", headers);
-
-
-
-
     // Check if username is provided
     if (!usename) {
         throw new ApiError(400, "Username is not provided");
@@ -301,7 +292,7 @@ const AccessUser = asyncHandel(async (req, res) => {
 
     // Find user in the database
     const user = await User.findOne({ usename: usename });
-    console.log(user); // This will help you debug
+     
 
     // Check if user exists
     if (!user) {
