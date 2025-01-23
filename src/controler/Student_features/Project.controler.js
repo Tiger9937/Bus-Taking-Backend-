@@ -40,14 +40,21 @@ const addProject =asyncHandel(async(req,res)=>{
         img:tech.img,
         url: tech.url
     }))
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0153a32f889b05cfc5ac85f848c5ed8d7cd32f01
     const project = await Project.create({
         title,
         category,
         status,
         startDate,
         readme,
+<<<<<<< HEAD
         endDate:endDate || null,
+=======
+        endDate,
+>>>>>>> 0153a32f889b05cfc5ac85f848c5ed8d7cd32f01
         teamMembers,
         totalmember,
         totalmember,
@@ -58,7 +65,10 @@ const addProject =asyncHandel(async(req,res)=>{
         thumbnail:thumbnailimage,
         technologiesUsed:abstract_technologiesUsed_elements
     })
+<<<<<<< HEAD
     
+=======
+>>>>>>> 0153a32f889b05cfc5ac85f848c5ed8d7cd32f01
     if (!project) {
         throw new ApiError(405,"Project is not created ")
     }
