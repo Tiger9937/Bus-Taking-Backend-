@@ -1,7 +1,7 @@
 
 import mongoose from "mongoose";
 
-// Define the schema for a project
+
 const projectSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -22,7 +22,7 @@ const projectSchema = new mongoose.Schema({
         default: 'Planned'
     },
     thumbnail:{
-        ttype: String,
+        type: String,
         required: true
     },
     technologiesUsed: {
@@ -53,10 +53,10 @@ const projectSchema = new mongoose.Schema({
         type: Date,
         required: false // Can be empty if the project is ongoing
     },
-    teamMembers: {
+    teamMembers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
-    },
+    }],
     totalmember:{
         type:Number
     },
@@ -69,14 +69,16 @@ const projectSchema = new mongoose.Schema({
         required: false
     },
     budget: {
-        type: Number,
+        type: String,
         required: false
     },
+    type: {
+        type: String,
+        required: true
+    },
     rating: {
-        type: Number,
-        required: false,
-        min: 0,
-        max: 5
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Rading'
     },
     notification:{
         type: mongoose.Schema.Types.ObjectId,
@@ -100,4 +102,4 @@ const projectSchema = new mongoose.Schema({
     }
 },{timestamps:true});
 
-export const Project = mongoose.model('Project', projectSchema)
+export  const Project = mongoose.model('Project', projectSchema)

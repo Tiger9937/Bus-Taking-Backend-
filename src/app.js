@@ -37,6 +37,7 @@ import CommentRoute from './router/comment.route.js'
 import ProjectRoute from './router/project.rout.js'
 import LikeRout from './router/likes.rout.js'
 import Notification from './router/notification.rout.js'
+import RatingRouter from './router/Rating.rout.js'
 
 // StudentRout
 app.use('/api/v1/users', UserRouter);
@@ -49,5 +50,5 @@ app.use('/api/v1/comment' , CommentRoute);
 app.use('/api/v1/Project' , ProjectRoute);
 app.use('/api/v1/Likes',LikeRout);
 app.use('/api/v1/notify',Notification)
-
+app.use('/api/v1/Rating',RatingRouter)
 export { app };

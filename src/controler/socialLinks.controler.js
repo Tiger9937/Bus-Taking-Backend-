@@ -8,8 +8,10 @@ import mongoose from "mongoose";
 import {jsonfiles_In_temp , Delete_jsonfiles_In_temp} from '../middlewares/createJsonfile.js'
 
 const CreateMidia = asyncHandel(async(req,res)=>{
-    console.log("Break point")
+    
     const {Student_OR_College_Id,SocialLinks,Appimage} = req.body    
+    console.log("req.body::->",req.body)
+    console.log("social DATA::",Student_OR_College_Id,SocialLinks,Appimage)
 
     if (!Student_OR_College_Id &&!SocialLinks &&!Appimage) {
         throw new ApiError("All filds are Requred")
@@ -17,7 +19,7 @@ const CreateMidia = asyncHandel(async(req,res)=>{
 
     const Does_StudentExist  = await Student.exists({_id:Student_OR_College_Id})
 
-    await socialMedias.create({
+    const social_Data = await socialMedias.create({
             [Does_StudentExist ? "StudentId" : "CollegeId"]:Student_OR_College_Id,
             links:SocialLinks.map((linkes,index)=>({
                     platform_Img:Appimage[index],
@@ -25,7 +27,7 @@ const CreateMidia = asyncHandel(async(req,res)=>{
             }))
     })
 
-    res.status(200).json({message:"Media Add Successfully"})
+    res.status(200).json(new Apires(200,social_Data,"Media created Successfully"))
 })
 
 const AccessAllMidia = asyncHandel(async(req,res)=>{
