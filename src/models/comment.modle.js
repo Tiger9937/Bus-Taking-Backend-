@@ -17,6 +17,11 @@ const commentsSchema = new mongoose.Schema(
       trim: true, 
       minlength: 1, 
     },
+    // product 
+    Project:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
+    },
   },
   { timestamps: true } 
 );

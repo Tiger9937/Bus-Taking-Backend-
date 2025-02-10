@@ -76,6 +76,10 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    ispublicis:{
+        type:Boolean,
+        default:true
+    },
     rating: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Rading'

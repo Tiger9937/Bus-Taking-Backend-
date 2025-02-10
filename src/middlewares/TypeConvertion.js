@@ -11,4 +11,21 @@ function stringTojson(req) {
     }
 }
 
-export {stringTojson}
+function StringToarray(string) {
+    
+    if (!string) {
+        console.log("string is not valid")
+    }
+
+    try {
+
+        let slice = string.slice(1,-1)
+        let newarray = slice.split(',')
+        return newarray        
+
+    } catch (error) {
+        return error
+    }
+}
+
+export {stringTojson , StringToarray}

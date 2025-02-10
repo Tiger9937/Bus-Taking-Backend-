@@ -6,9 +6,9 @@ import {Apires} from '../utils/Apires.js'
 import { Student } from '../models/student.modle.js'
 
 const CreateComment = asyncHandel(async (req,res)=>{
-    const {ID,comment} = req.body
+    const {ID,comment,...productID} = req.body
 
-    if (!comment && !ID) {
+    if (!comment && !ID && !{...productID}) {
         throw new ApiError(400,"All fild is requred")
     }
     if (!mongoose.Types.ObjectId.isValid(ID)) {
@@ -21,7 +21,8 @@ const CreateComment = asyncHandel(async (req,res)=>{
 
     const NewComment = await Comment.create({
         [StudentID ?  "studentId" : "collegeId"] : ID,
-        comment
+        comment,
+        ...productID
     })
 
     if (!NewComment) {
@@ -44,10 +45,10 @@ const removedComment = asyncHandel(async (req,res)=>{
     res.status(200).json(200,{message:"Comment delete successful"})
 })
 
-// TODO:: make this all comments in particular use case
-// const AccessAllComments = asyncHandel(async ()=>{
+
+const AccessAllComments = asyncHandel(async (req,res)=>{
       
-// })
+})
 
 const AccessParticulaeComment = asyncHandel(async (req,res)=>{
     const {CommentID} = req.query

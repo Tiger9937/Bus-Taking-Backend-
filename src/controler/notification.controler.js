@@ -2,6 +2,7 @@ import { ApiError } from '../utils/ApiError.js'
 import { Apires } from '../utils/Apires.js'
 import {DevNotify} from '../utils/DevNotification.js'
 import {asyncHandel} from '../utils/asyncHandaler.js'
+import {Notification} from '../models/notification.modle.js'
 import Subscriber from '../models/Notifysubscription.modle.js'
 
 
@@ -27,15 +28,22 @@ const SubscribeToNotify = asyncHandel(async(req , res)=>{
 })
 
 const CreateNotification = asyncHandel(async (req,res)=>{
-    const {sender_ID,message,receiver_ID} = req.body
-    console.log(sender_ID,message,receiver_ID)
+    const {sender_ID,message,receiver_ID,type,...productID} = req.body
+   
 
     if (!sender_ID && !message && !receiver_ID) {
         throw new ApiError(400,"All fields are required")
     }
 
-    // send req for spcifc student  
+    const Notification_stack = await Notification.create({
+        sender:sender_ID,
+        receiver:receiver_ID,
+        notification:message,
+        type,
+        ...productID
+    })
 
+    res.status(200).json(new Apires(200, Notification_stack ,"Notify"))  
 })
 
 const sendNotification_user = asyncHandel(async (req,res)=>{
@@ -63,14 +71,26 @@ const SendSelectNotification_college_student = asyncHandel(async()=>{
     const {Notificationid,...notifier} = req.query
 })
 
-const removedNotification = asyncHandel(async ()=>{
+const removedNotification = asyncHandel(async (req , res)=>{
     const {Notificationid} = req.query
+
+    if (!Notificationid) {
+        throw new ApiError(400,"Notificationid is required To delete the notification")
+    }
+
+    await Notification.findByIdAndDelete(Notificationid)
+
+    res.status(200).json({message:"Notification Delete"})
 })
 
+const All_removedNotification = asyncHandel(async(req,res)=>{
+    await Notification.deleteMany({})
 
+    res.status(200).json({message:"Notification Delete"})
+})
 
 export { 
     CreateNotification ,sendNotification_user ,removedNotification , 
     SendAllNotification_college_student , SendSelectNotification_college_student , 
-    SubscribeToNotify
+    SubscribeToNotify,All_removedNotification
 }

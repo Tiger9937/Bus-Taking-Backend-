@@ -1,15 +1,12 @@
-import {Project} from '../../models/Student_features/Project.modle.js'
-import {asyncHandel} from '../../utils/asyncHandaler.js'
-import {Is_Image_Available} from '../../middlewares/IsFileavailable.js'
-import {ApiError} from '../../utils/ApiError.js'
-import {Apires} from '../../utils/Apires.js'
-import {stringTojson} from '../../middlewares/TypeConvertion.js'
+import {Project} from '../../../models/Student_features/Project.modle.js'
+import {asyncHandel} from '../../../utils/asyncHandaler.js'
+import {Is_Image_Available} from '../../../middlewares/IsFileavailable.js'
+import {ApiError} from '../../../utils/ApiError.js'
+import {Apires} from '../../../utils/Apires.js'
+import {stringTojson} from '../../../middlewares/TypeConvertion.js'
  
 
 const addProject =asyncHandel(async(req,res)=>{
-    
-    
-    console.log(req.body)
     const {
         title, // string
         owner, // string
@@ -25,10 +22,34 @@ const addProject =asyncHandel(async(req,res)=>{
         goal, // string
         outcome, // string
         budget, // number
-        socialLinksid // id sting
+        socialLinksid, // id sting
+        hiden
     } = stringTojson(req)
+    
 
-    if (!technologiesUsed && !teamMembers && !totalmember) {
+    console.log(
+        title, // string
+        owner, // string
+        category, // string
+        status, // enum
+        technologiesUsed, // array
+        startDate, // Date
+        readme, // string
+        endDate, // date
+        teamMembers, // array 
+        totalmember, // numbers
+        type,
+        goal, // string
+        outcome, // string
+        budget, // number
+        socialLinksid, // id sting
+        hiden   
+    )
+
+
+
+
+    if (!technologiesUsed && !teamMembers && !totalmember && !hiden) {
         throw new ApiError(400, "All fields are required Create Project");
     }
 
@@ -63,7 +84,8 @@ const addProject =asyncHandel(async(req,res)=>{
         budget,
         socialLinks:socialLinksid,
         thumbnail:thumbnailimage.url,
-        technologiesUsed:abstract_technologiesUsed_elements
+        technologiesUsed:abstract_technologiesUsed_elements,
+        ispublicis:hiden
     })
     if (!project) {
         throw new ApiError(405,"Project is not created ")
@@ -113,4 +135,17 @@ const DeleteAllProjects = asyncHandel(async(req,res)=>{
     res.status(200).json({message:`Totall ${deletedDocument.deletedCount} document hazbin deleted`})
 })
 
-export {addProject,removedProject,updateProject,DeleteAllProjects}
+const HideProject = asyncHandel(async(req,res)=>{
+    const {ProjectId,ispublicis} = req.query
+    if (!ProjectId) {
+        throw new ApiError(400,"ProjectID is requred To change")
+    }
+
+    const project = await Project.findByIdAndUpdate(ProjectId,{
+        ispublicis
+    })
+
+    res.status(200).json(new Apires(200,project,"your project File"))
+})
+
+export {addProject,removedProject,updateProject,DeleteAllProjects,HideProject}

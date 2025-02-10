@@ -1,32 +1,43 @@
-import { Schema, model } from "mongoose";
+import {mongoose, Schema, model } from "mongoose";
 
 const notificationSchema = new Schema({
-    user:{
+    sender:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
-        required: true,
+        required: true
     },
-    student:{
+    receiver:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'student',
+        ref: 'user',
+        required: true
+    },
+    student: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'Student'
     },
     college:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'college',
+        ref: 'college'
     },
     notification:{
         type: String,
-        required: true,
+        required: true
     },
     type: { // Type of notification (e.g., info, warning, success)
         type: String,
         enum: ['info', 'warning', 'success', 'error'],
-        default: 'info',
+        default: 'info'
     },
     isRead: { // Track whether the notification has been read
         type: Boolean,
-        default: false,
+        default: false
+    },
+
+    // product 
+    Project:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
     },
 },{timestamps: true})
 
-export const notification = model('notification', notificationSchema);
+export const Notification = model('notification', notificationSchema);
