@@ -3,11 +3,13 @@ import {asyncHandel} from '../../../utils/asyncHandaler.js'
 import {Is_Image_Available} from '../../../middlewares/IsFileavailable.js'
 import {ApiError} from '../../../utils/ApiError.js'
 import {Apires} from '../../../utils/Apires.js'
-import {stringTojson} from '../../../middlewares/TypeConvertion.js'
+import {StringToarray, stringTojson} from '../../../middlewares/TypeConvertion.js'
  
 
 const addProject =asyncHandel(async(req,res)=>{
-    const {
+    // TODO::useAgricationpipline to sent all relavend Data
+
+    let {
         title, // string
         owner, // string
         category, // string
@@ -23,33 +25,13 @@ const addProject =asyncHandel(async(req,res)=>{
         outcome, // string
         budget, // number
         socialLinksid, // id sting
-        hiden
-    } = stringTojson(req)
+        ispublicis
+    } = req.body
     
+    technologiesUsed = StringToarray(technologiesUsed)
+    teamMembers = StringToarray(teamMembers)
 
-    console.log(
-        title, // string
-        owner, // string
-        category, // string
-        status, // enum
-        technologiesUsed, // array
-        startDate, // Date
-        readme, // string
-        endDate, // date
-        teamMembers, // array 
-        totalmember, // numbers
-        type,
-        goal, // string
-        outcome, // string
-        budget, // number
-        socialLinksid, // id sting
-        hiden   
-    )
-
-
-
-
-    if (!technologiesUsed && !teamMembers && !totalmember && !hiden) {
+    if (!technologiesUsed && !teamMembers && !totalmember && !ispublicis) {
         throw new ApiError(400, "All fields are required Create Project");
     }
 
@@ -60,8 +42,8 @@ const addProject =asyncHandel(async(req,res)=>{
     }
     
     let thumbnailimage = await Is_Image_Available(req.files.thumbnail[0].path)
-    
-    const abstract_technologiesUsed_elements = technologiesUsed.map(tech=>({
+
+    const abstract_technologiesUsed_elements = technologiesUsed.forEach(tech=>({
         name:tech.name,
         img:tech.img,
         url: tech.url
@@ -85,7 +67,7 @@ const addProject =asyncHandel(async(req,res)=>{
         socialLinks:socialLinksid,
         thumbnail:thumbnailimage.url,
         technologiesUsed:abstract_technologiesUsed_elements,
-        ispublicis:hiden
+        ispublicis:ispublicis
     })
     if (!project) {
         throw new ApiError(405,"Project is not created ")
@@ -113,20 +95,22 @@ const updateProject =asyncHandel(async(req,res)=>{
         throw new ApiError(400, "All fields are required Update Project");
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(projectID,{
+    await Project.findByIdAndUpdate(projectID,{
         ...Updatedinformation
     })
+
+    const updatedProject = await Project.findById(projectID)
 
     res.status(200).json(new Apires(200,updatedProject,"Update successful"))
 })
 
 const DeleteAllProjects = asyncHandel(async(req,res)=>{
-    const {owner} = req.params
-    if (!owner) {
+    const {ownerID} = req.params
+    if (!ownerID) {
         throw new ApiError(400, "owner permission is requred to Delete All Project");
     }
 
-    const deletedDocument = await Project.deleteMany({owner:owner})
+    const deletedDocument = await Project.deleteMany({owner:ownerID})
 
     if (!deletedDocument) {
         throw new ApiError(400, "All documents are failing to delete");

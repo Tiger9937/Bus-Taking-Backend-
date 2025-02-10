@@ -30,6 +30,12 @@ const SearchProjet_thought_Wordquery = asyncHandel(async(req,res)=>{
     res.status(200).json(new Apires(200,project,"Project send"))
 })
 
+// this request give all the project previwe that present no our database
+// this request is not for spcificuser
+const public_Preview = asyncHandel(async(req,res)=>{
+    
+})
+
 export {
     SearchProjet_project,
     SearchProjet_thought_Wordquery
