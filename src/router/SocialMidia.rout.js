@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {CreateMidia , AccessAllMidia , RemovedAllMidia , RemovedSelectedMidias , AddMidia , AccessAllMidiafottest } from '../controler/socialLinks.controler.js'
+import {CreateMidia , removiedMidia , AccessMidia } from '../controler/socialLinks.controler.js'
 import {jwtVarify} from '../middlewares/auth.middlware.js';
 
 
@@ -7,13 +7,8 @@ const MidiaRouter = Router()
 
 MidiaRouter.route("/CreateMidia").post(jwtVarify,CreateMidia)
 
-MidiaRouter.route("/AccessAllMidia").get(jwtVarify,AccessAllMidia)
-MidiaRouter.route("/AccessAllMidiafottest").get(jwtVarify,AccessAllMidiafottest)
+MidiaRouter.route("/Access/mdiaID").get(jwtVarify,AccessMidia)
 
-MidiaRouter.route("/RemovedAllMidia/:MidialId").get(jwtVarify,RemovedAllMidia)
-
-MidiaRouter.route("/RemovedSelectedMidias").patch(jwtVarify,RemovedSelectedMidias)
-
-MidiaRouter.route("/AddMidia").patch(jwtVarify,AddMidia)
+MidiaRouter.route("/removed").post(jwtVarify,removiedMidia)
 
 export default MidiaRouter

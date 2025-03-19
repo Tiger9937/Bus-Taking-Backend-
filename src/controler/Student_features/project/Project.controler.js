@@ -4,7 +4,7 @@ import {Is_Image_Available} from '../../../middlewares/IsFileavailable.js'
 import {ApiError} from '../../../utils/ApiError.js'
 import {Apires} from '../../../utils/Apires.js'
 import {StringToarray, stringTojson} from '../../../middlewares/TypeConvertion.js'
- 
+import {techmaker} from '../../../system/techstackmaker.system.js'
 
 const addProject =asyncHandel(async(req,res)=>{
     // TODO::useAgricationpipline to sent all relavend Data
@@ -27,7 +27,8 @@ const addProject =asyncHandel(async(req,res)=>{
         socialLinksid, // id sting
         ispublicis
     } = req.body
-    
+
+    let abstract_technologiesUsed_elements = [];
     technologiesUsed = StringToarray(technologiesUsed)
     teamMembers = StringToarray(teamMembers)
 
@@ -42,12 +43,14 @@ const addProject =asyncHandel(async(req,res)=>{
     }
     
     let thumbnailimage = await Is_Image_Available(req.files.thumbnail[0].path)
+   
 
-    const abstract_technologiesUsed_elements = technologiesUsed.forEach(tech=>({
-        name:tech.name,
-        img:tech.img,
-        url: tech.url
-    }))
+    technologiesUsed.forEach((tech) => { 
+        let newTech = techmaker(tech.imgpath, tech.domain, tech.name);
+        abstract_technologiesUsed_elements.push(newTech);
+    });
+
+    
 
     const project = await Project.create({
         title,
@@ -69,9 +72,12 @@ const addProject =asyncHandel(async(req,res)=>{
         technologiesUsed:abstract_technologiesUsed_elements,
         ispublicis:ispublicis
     })
+
+    
     if (!project) {
         throw new ApiError(405,"Project is not created ")
     }
+    
     res.status(200).json(new Apires(200,project,"Project Created Successfully"))
 })
 

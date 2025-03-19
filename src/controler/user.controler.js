@@ -7,6 +7,9 @@ import {Delete_file} from '../utils/deletfileCludinary.js';
 import jwt from 'jsonwebtoken'
 import  mongoose  from 'mongoose';
 import {Pick_Random_Image} from '../utils/Random_image_piker.js'
+import {Student} from '../models/student.modle.js'
+
+
 
 const generate_AccessToken_RefreshToken = async (userid)=>{
     try {
@@ -23,7 +26,7 @@ const generate_AccessToken_RefreshToken = async (userid)=>{
         
         throw new ApiError(401, "Token will not be generated");
     }
-}
+} 
 
 const Register_User = asyncHandel(async (req, res) => {
     // GET details from frontend 👌
@@ -53,6 +56,7 @@ const Register_User = asyncHandel(async (req, res) => {
     }
     // TODO:: Chenge the name as 'user_profile_image' to ''user_profile_images'
     const Avter = await Pick_Random_Image('user_profile_images')
+    console.log(Avter)
     
      await User.create({
         usename,
@@ -74,11 +78,15 @@ const Login_User = asyncHandel(async (req,res)=>{
     // password cheak👌
     // send this Token in cookie    
     // RETURN respons to login
+    
+   
     const {usename,email,password} = req.body
     
+
     if(!email && !usename){
         throw new ApiError(400,"All fields are required to login")
     }
+
     const Exuser = await User.findOne({$or:[{email},{usename}]})
 
     if(!Exuser){
@@ -353,6 +361,40 @@ const AccessUser = asyncHandel(async (req, res) => {
     );
 });
 
+const SearchUser = asyncHandel(async (req, res) => {
+    const { searchWord } = req.query; // Get the search keyword from query parameters
+
+    if (!searchWord) {
+        throw new ApiError(400, "Search word is required");
+    }
+
+    // Step 1: Search Users Based on Name or Full Name
+    const users = await User.find({
+        $or: [
+            { name: { $regex: searchWord, $options: "i" } },
+            { fullname: { $regex: searchWord, $options: "i" } }
+        ]
+    }).select('-refreshToken -createdAt -updatedAt -password -__v'); 
+
+    if (users.length === 0) {
+        return res.status(200).json(new Apires(200, [], "No users found"));
+    }
+    
+    const userIds = users.map(user => user._id);
+    
+
+    const studentUsers = await Student.find({ user: { $in: userIds } }).select("user");
+    const studentUserIds = new Set(studentUsers.map(student => student.user.toString())); 
+
+    const usersWithRole = users.map(user => ({
+        ...user._doc,
+        role: studentUserIds.has(user._id.toString()) ? "student" : "user" 
+    }));
+    
+
+    res.status(200).json(new Apires(200, usersWithRole, "All available users"));
+});
+
 
 export { 
             Register_User,
@@ -362,5 +404,6 @@ export {
             UpDateAvatar_image,
             AccountDetails_Change,
             Password_Change,
-            AccessUser
+            AccessUser,
+            SearchUser
 };

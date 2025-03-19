@@ -45,7 +45,7 @@ const collegeSchema = new mongoose.Schema({
 
   ownby: {
     type: String,
-    enum: ['private', 'gov'], // Limits to specific values
+    enum: ['Private', 'Government'], // Limits to specific values
     required: true, // Field is mandatory
   },
   ownername:{

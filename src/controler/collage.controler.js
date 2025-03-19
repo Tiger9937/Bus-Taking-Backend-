@@ -6,6 +6,7 @@ import {Is_Image_Available} from '../middlewares/IsFileavailable.js'
 import {stringTojson} from '../middlewares/TypeConvertion.js'
 import {Addresses} from '../models/address.modle.js'
 import {University} from '../models/University.modle.js'
+import {Student} from '../models/student.modle.js'
 
 // TODO:: create a Faculty information controler
 // TODO:: Working in university
@@ -13,33 +14,38 @@ import {University} from '../models/University.modle.js'
 // TODO:: Make a middlewares That trnsfare data in one controler to anther controler
 // 
 
-// Separate the auth system especially for college
-
-const Collage_singup = asyncHandel(async (res , req)=>{
-
-}) 
-
-const Collage_Login = asyncHandel(async (res , req)=>{
-
-}) 
-
-
 const CollageRigster = asyncHandel(async (req,res)=>{
-   const {name ,establishedYear , phone , email , totalStudents , TotalFaculty , website , description , affiliatedUniversityName , coursesOffered , 
-         BusName , collageAddress,ownby,ownername } = stringTojson(req)
+   const {name ,
+     establishedYear ,
+     phone , 
+     email , 
+     totalStudents , 
+     TotalFaculty , 
+     website , 
+     description , 
+     affiliatedUniversityName , 
+     coursesOffered , 
+     BusName , 
+     collageAddress,
+     ownby,
+     ownername } = stringTojson(req)
 
 
         // if (condition) {
             
         // }
-
+        
+        const Is_user_is_student = await Student.findOne({user:req.user._id})
+        if (Is_user_is_student) {
+            throw new ApiError(400 , "this user already have registered himself as student")
+        }
 
         if (!collageAddress) {
-            throw new ApiError(400, "All fields are required to Collage Rigster");
+            throw new ApiError(400, "All fields are required to  Rigster college Address");
         }
 
         // if (!BusName) {
-        //     throw new ApiError(400, "All fields are required to Collage Rigster");
+        //     throw new ApiError(400, "All fields are required to Collage Rigster"); 
         // }
         
         if (!coursesOffered) {
@@ -50,7 +56,7 @@ const CollageRigster = asyncHandel(async (req,res)=>{
         if (!Address) {
             throw new ApiError(401,"Address is not created")
         }
-        console.log(Address)
+        
         // getUniversityinfo = ()=>{
         //     const info = {}
                 

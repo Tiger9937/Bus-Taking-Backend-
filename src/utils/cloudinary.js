@@ -17,10 +17,8 @@ const cloudinary_FUNCTION = async (Local_File_Path)=>{
                 const fileRSPOS = await cloudinary.uploader.upload(Local_File_Path,{
                 resource_type: 'auto',folder : "user profile image"
             }) 
-            console.log("file has been successfully uploaded",fileRSPOS.url)
             setTimeout(()=>{
                 fs.unlinkSync(Local_File_Path);
-                console.log("file delete success full")
             }, 2000);
             return fileRSPOS
 

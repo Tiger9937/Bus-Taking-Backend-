@@ -3,15 +3,18 @@ import mongoose from "mongoose";
 
 
 const projectSchema = new mongoose.Schema({
+
     title: {
         type: String,
         required: true
     },
+
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Student',
         required: true
     },
+    
     category: {
         type: String,
         required: true
@@ -25,22 +28,13 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    technologiesUsed: {
-        tech: [{
-          title: {
-            type: String,
-            required: true
-          },
-          platform_Img: {
-            type: String,
-            required: true
-          },
-          url: {
-            type: String,
-            required: true
-          }
-        }]
-      },
+
+    technologiesUsed: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'technology'
+      }
+    ],
+
     startDate: {
         type: Date,
         required: true

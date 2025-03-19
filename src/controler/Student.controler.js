@@ -5,6 +5,7 @@ import { ApiWarning } from '../utils/ApiWorn.js'
 import { Apires } from '../utils/Apires.js';
 import {Addresses} from '../models/address.modle.js'
 import {Enrollment} from '../models/enrollment.modle.js'
+import {College} from '../models/collage.model.js'
 import mongoose from 'mongoose';
 
 
@@ -21,7 +22,15 @@ const studentRegister = asyncHandel(async (req, res) => {
         Address,
         Living_address
     } = req.body;
-    console.log("dob and age" ,DOB , age)
+
+
+
+            const Is_user_is_college = await Collage.findOne({user:req.user._id})
+            if (Is_user_is_college) {
+                throw new ApiError(400 , "this user already have registered himself as collage")
+            }
+
+
     
     if ([mobileNumber, Collage, course, enrolmentDate, RollNumber , Gender].some((field) => field?.trim() === "")) {
       throw new ApiError(400, "All fields are required to register as a student");
@@ -486,10 +495,52 @@ res.status(200).json(new Apires(200 , student ,"Student successfully updated"))
 
 })  
 
+const Searchstudent = asyncHandel(async (req, res) => {
+  const { searchWord } = req.query; // Get the search keyword from query parameters
+
+  if (!searchWord) {
+      throw new ApiError(400, "Search word is required");
+  }
+
+  const Students = await Student.aggregate([
+      {
+          $lookup: {
+              from: "users", 
+              localField: "user", 
+              foreignField: "_id", 
+              as: "userDetails" 
+          }
+      },
+      {
+          $unwind: "$userDetails" // Convert userDetails array into an object
+      },
+      {
+          $match: {
+              $or: [
+                  { "name": { $regex: searchWord, $options: "i" } }, // Match student name
+                  { "userDetails.fullname": { $regex: searchWord, $options: "i" } } // Match user full name
+              ]
+          }
+      },
+      {
+          $project: {
+              _id: 1,
+              name: 1,
+              "userDetails.fullname": 1,
+              "userDetails.email": 1 // Add any other user fields you need
+          }
+      }
+  ]);
+
+  console.log("comingData:", Students);
+
+  res.status(200).json(new Apires(200, Students, "All available Students"));
+});
 
 
 export{
     StudentProfile,
     studentRegister,
-    UpdateStudentProfile   
+    UpdateStudentProfile,
+    Searchstudent   
 } 
